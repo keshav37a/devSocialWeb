@@ -4,7 +4,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router';
 import Body from './components/Body.jsx';
 import Login from './components/Login.jsx';
 import Profile from './components/Profile.jsx';
-import './index.css';
+import './styles.css';
 
 const router = createBrowserRouter([
     {
