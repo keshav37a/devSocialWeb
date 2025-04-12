@@ -1,9 +1,11 @@
+import SignIn from '@Auth/SignIn.jsx';
+import Body from '@CoreUI/Body.jsx';
+import Profile from '@Profile/Profile.jsx';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
 import { RouterProvider, createBrowserRouter } from 'react-router';
-import Body from './components/Body.jsx';
-import Login from './components/Login.jsx';
-import Profile from './components/Profile.jsx';
+import { store } from './store.js';
 import './styles.css';
 
 const router = createBrowserRouter([
@@ -12,8 +14,8 @@ const router = createBrowserRouter([
         element: <Body />,
         children: [
             {
-                path: '/login',
-                element: <Login />,
+                path: '/signin',
+                element: <SignIn />,
             },
             {
                 path: '/profile',
@@ -25,6 +27,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        <RouterProvider router={router} />
+        <Provider store={store}>
+            <RouterProvider router={router} />
+        </Provider>
     </StrictMode>
 );

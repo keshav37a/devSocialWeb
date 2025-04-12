@@ -1,14 +1,17 @@
+import { BASE_URL } from '@/constants';
+import Card from '@CoreUI/Card';
 import axios from 'axios';
 import { useState } from 'react';
-import { BASE_URL } from '../constants';
-import Card from './Card';
+import { useDispatch } from 'react-redux';
+import { loginUser } from './authSlice';
 
-const Login = () => {
+const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const dispatch = useDispatch();
 
     const handleLogin = async () => {
-        axios
+        const data = await axios
             .post(
                 `${BASE_URL}/auth/signin`,
                 {
@@ -18,8 +21,10 @@ const Login = () => {
                 { validateStatus: false, withCredentials: true }
             )
             .catch((err) => {
+                console.log('catch');
                 console.log(err);
             });
+        dispatch(loginUser(data.data));
     };
 
     return (
@@ -50,4 +55,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default SignIn;
