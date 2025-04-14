@@ -1,58 +1,61 @@
-import { BASE_URL } from '@/constants';
-import Card from '@CoreUI/Card';
-import axios from 'axios';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { loginUser } from './authSlice';
 
-const SignIn = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
+
+import { signInUser } from './authSlice';
+
+import { Card } from '@CoreUI';
+
+import { BASE_URL } from 'src/constants';
+
+export const SignIn = () => {
+    const [email, setEmail] = useState('admin@gmail.com');
+    const [password, setPassword] = useState('password');
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleChangeEmail = (e) => setEmail(e.target.value);
+    const handleChangePassword = (e) => setPassword(e.target.value);
 
     const handleLogin = async () => {
-        const data = await axios
-            .post(
+        try {
+            const { data } = await axios.post(
                 `${BASE_URL}/auth/signin`,
                 {
                     email,
                     password,
                 },
                 { validateStatus: false, withCredentials: true }
-            )
-            .catch((err) => {
-                console.log('catch');
-                console.log(err);
-            });
-        dispatch(loginUser(data.data));
+            );
+            dispatch(signInUser(data));
+            if (data?.data?.user) {
+                navigate('/feed');
+            }
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
-        <Card className='mt-16' isCenter>
+        <Card isCenter className='mt-16'>
             <fieldset className='fieldset w-xs'>
                 <legend className='fieldset-legend'>Login</legend>
                 <label className='fieldset-label'>Email</label>
-                <input
-                    onChange={(e) => setEmail(e.target.value)}
-                    value={email}
-                    type='email'
-                    className='input'
-                    placeholder='Email'
-                />
+                <input className='input' onChange={handleChangeEmail} placeholder='Email' type='email' value={email} />
                 <label className='fieldset-label'>Password</label>
                 <input
-                    onChange={(e) => setPassword(e.target.value)}
-                    value={password}
-                    type='password'
                     className='input'
+                    onChange={handleChangePassword}
                     placeholder='Password'
+                    type='password'
+                    value={password}
                 />
-                <button onClick={handleLogin} disabled={!email || !password} className='btn btn-neutral mt-4'>
+                <button className='btn btn-neutral mt-4' disabled={!email || !password} onClick={handleLogin}>
                     Login
                 </button>
             </fieldset>
         </Card>
     );
 };
-
-export default SignIn;
