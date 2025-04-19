@@ -12,8 +12,9 @@ export default defineConfig({
             '@CoreUI': path.resolve(__dirname, './src/modules/CoreUI'),
             '@Profile': path.resolve(__dirname, './src/modules/Profile'),
             '@Feed': path.resolve(__dirname, './src/modules/Feed'),
-            src: path.resolve(__dirname, './src'),
             modules: path.resolve(__dirname, './src/modules'),
+            services: path.resolve(__dirname, './src/services'),
+            src: path.resolve(__dirname, './src'),
         },
     },
-});
+})

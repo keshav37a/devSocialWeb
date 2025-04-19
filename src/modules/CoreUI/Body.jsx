@@ -1,57 +1,44 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react'
 
-import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux'
+import { Outlet, useLocation, useNavigate } from 'react-router'
 
-import { Footer, Navbar } from '@CoreUI';
+import { Footer, Loading, Navbar } from '@CoreUI'
 
-import { signInUser } from '@Auth/authSlice';
+import { signInUser } from '@Auth/authSlice'
+import { useGetUserProfileQuery } from 'services'
 
-import { getCookieValue } from 'src/utils';
-
-import { BASE_URL } from 'src/constants';
+import { getCookieValue } from 'src/utils'
 
 export const Body = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { pathname } = useLocation();
-    const { user } = useSelector((state) => state.auth);
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const { pathname } = useLocation()
+    const { user } = useSelector((state) => state.auth)
+    const token = getCookieValue('token')
 
-    const fetchUserProfile = useCallback(async () => {
-        try {
-            const { data } = await axios.get(`${BASE_URL}/profile/view`, { withCredentials: true });
-            if (data.data?.user) {
-                dispatch(signInUser(data));
-            }
-        } catch (err) {
-            console.log(err);
-            if (err.status === 401) {
-                navigate('/signin');
-            }
-        }
-    }, [dispatch, navigate]);
+    const { isLoading: isUserProfileLoading, data: userProfileRequestData } = useGetUserProfileQuery(null, {
+        skip: (!token && !user) || user,
+    })
+    const { data, status } = userProfileRequestData || {}
 
     useEffect(() => {
-        const token = getCookieValue('token');
-        if (token && !user) {
-            fetchUserProfile();
+        const disAllowedRoutes = ['/profile', '/feed']
+        const token = getCookieValue('token')
+        if (disAllowedRoutes.includes(pathname) && !token) {
+            navigate('/signin')
         }
-    }, [fetchUserProfile, user]);
-
-    useEffect(() => {
-        const disAllowedRoutes = ['/profile', '/feed'];
-        const token = getCookieValue('token');
-        if (disAllowedRoutes.includes(pathname) && !token && !user) {
-            navigate('/signin');
+        if (data?.user && status?.success && !user && token) {
+            dispatch(signInUser(data.user))
         }
-    }, [pathname, user, navigate]);
+    }, [pathname, user, data?.user, status?.success, navigate])
 
     return (
         <>
+            {isUserProfileLoading ? <Loading /> : null}
             <Navbar />
             <Outlet />
             <Footer />
         </>
-    );
-};
+    )
+}

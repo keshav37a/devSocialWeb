@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "target": "es6",
+        "paths": {
+            "@Auth/*": ["src/modules/Auth/*"],
+            "@CoreUI/*": ["src/modules/CoreUI/*"],
+            "@Feed/*": ["src/modules/Feed/*"],
+            "@Profile/*": ["src/modules/Profile/*"],
+            "modules/*": ["src/modules/*"],
+            "services": ["src/services/*"],
+            "src/*": ["src/*"]
+        }
+    },
+    "exclude": ["node_modules", "dist"]
+}

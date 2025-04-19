@@ -4,8 +4,8 @@ export const getCookieValue = (cookieName) =>
               .split('; ')
               .find((row) => row.startsWith(`${cookieName}=`))
               ?.split('=')[1]
-        : null;
+        : null
 
 export const deleteCookie = (cookieName) => {
-    document.cookie = cookieName + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-};
+    document.cookie = cookieName + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+}
