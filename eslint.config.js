@@ -96,6 +96,16 @@ export default defineConfig([
                             position: 'before',
                         },
                         {
+                            pattern: '*/*Slice',
+                            group: 'internal',
+                            position: 'after',
+                        },
+                        {
+                            pattern: 'services',
+                            group: 'internal',
+                            position: 'after',
+                        },
+                        {
                             pattern: '*/*utils',
                             group: 'internal',
                             position: 'after',

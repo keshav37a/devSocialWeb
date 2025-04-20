@@ -7,7 +7,9 @@
     "plugins": ["prettier-plugin-tailwindcss"],
     "semi": false,
     "singleQuote": true,
+    "sortingMethod": "alphabetical",
     "tabWidth": 4,
     "tailwindStylesheet": "./src/styles.css",
+    "newlineBetweenTypes": true,
     "trailingComma": "es5"
 }

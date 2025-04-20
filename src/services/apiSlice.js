@@ -32,7 +32,20 @@ export const apiSlice = createApi({
                 url: '/profile/view',
             }),
         }),
+        editUserProfile: build.mutation({
+            query: (updatedUserProfile) => ({
+                url: '/profile/edit',
+                method: 'PATCH',
+                body: updatedUserProfile,
+            }),
+        }),
     }),
 })
 
-export const { useGetUserFeedQuery, useGetUserProfileQuery, useSignInMutation, useSignOutMutation } = apiSlice
+export const {
+    useGetUserFeedQuery,
+    useGetUserProfileQuery,
+    useSignInMutation,
+    useSignOutMutation,
+    useEditUserProfileMutation,
+} = apiSlice

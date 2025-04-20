@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router'
 
 import { signOutUser } from '@Auth/authSlice'
-import { useSignOutMutation } from 'services'
+import { useSignOutMutation } from 'services/apiSlice'
 
 import { deleteCookie } from 'src/utils'
 

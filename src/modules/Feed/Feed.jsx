@@ -1,12 +1,41 @@
-import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
 
-import { useGetUserFeedQuery } from 'services'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { Loading } from '@CoreUI'
+import { UserCard } from '@Feed/UserCard'
+
+import { addFeed } from '@Feed/feedSlice'
+import { useGetUserFeedQuery } from 'services/apiSlice'
 
 export const Feed = () => {
     const { user } = useSelector((state) => state.auth)
-    const { data } = useGetUserFeedQuery(null, { skip: !user })
+    const { data, isLoading } = useGetUserFeedQuery(null, { skip: !user })
+    const { feed } = useSelector((state) => state.feed)
+    const dispatch = useDispatch()
 
-    console.log(data)
+    useEffect(() => {
+        const feedArr = data?.data?.feed
+        if (feedArr && feedArr.length > 0) {
+            dispatch(addFeed(feedArr))
+        }
+    }, [dispatch, data])
 
-    return <div>Hello Feed</div>
+    return (
+        <div className="feed">
+            {isLoading ? <Loading /> : null}
+            {feed
+                ? feed.map(({ _id, about, age, fullName, gender, photoUrl }) => (
+                      <UserCard
+                          about={about}
+                          age={age}
+                          fullName={fullName}
+                          gender={gender}
+                          key={_id}
+                          photoUrl={photoUrl}
+                      />
+                  ))
+                : null}
+        </div>
+    )
 }

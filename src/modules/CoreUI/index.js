@@ -1,7 +1,8 @@
-import { Body } from './Body'
-import { Card } from './Card'
-import { Footer } from './Footer'
-import { Loading } from './Loading'
-import { Navbar } from './Navbar'
-
-export { Body, Card, Footer, Loading, Navbar }
+export { Body } from './Body'
+export { Button } from './Button'
+export { Card } from './Card'
+export { Footer } from './Footer'
+export { Input } from './Input'
+export { Loading } from './Loading'
+export { Navbar } from './Navbar'
+export { TextArea } from './TextArea'

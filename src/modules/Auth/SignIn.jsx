@@ -3,10 +3,11 @@ import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
 
-import { Card, Loading } from '@CoreUI'
+import { Card, Input, Loading } from '@CoreUI'
+import { Button } from '@CoreUI/Button'
 
-import { useSignInMutation } from 'services'
-import { signInUser } from './authSlice'
+import { signInUser } from '@Auth/authSlice'
+import { useSignInMutation } from 'services/apiSlice'
 
 export const SignIn = () => {
     const [email, setEmail] = useState('admin@gmail.com')
@@ -17,8 +18,10 @@ export const SignIn = () => {
     const handleChangeEmail = (e) => setEmail(e.target.value)
     const handleChangePassword = (e) => setPassword(e.target.value)
 
-    const [handleSignIn, { isLoading: isSignInLoading, data: userSignInRequestData }] = useSignInMutation()
+    const [handleSignIn, { isLoading: isSignInLoading, data: userSignInRequestData, error }] = useSignInMutation()
     const { data, status } = userSignInRequestData || {}
+    const errorMessage = error?.data?.error?.message
+    const statusCode = error?.data?.status?.statusCode
 
     useEffect(() => {
         /* TODO: Error handling pending */
@@ -34,29 +37,32 @@ export const SignIn = () => {
             <Card isCenter className="mt-16">
                 <fieldset className="fieldset w-xs">
                     <legend className="fieldset-legend">Login</legend>
-                    <label className="fieldset-label">Email</label>
-                    <input
-                        className="input"
+                    <Input
+                        label={{ content: 'Email' }}
                         onChange={handleChangeEmail}
                         placeholder="Email"
                         type="email"
                         value={email}
                     />
-                    <label className="fieldset-label">Password</label>
-                    <input
-                        className="input"
+                    <Input
+                        error={
+                            (errorMessage && statusCode === 400) || statusCode === 404
+                                ? { content: errorMessage }
+                                : null
+                        }
+                        label={{ content: 'Password' }}
                         onChange={handleChangePassword}
                         placeholder="Password"
                         type="password"
                         value={password}
                     />
-                    <button
-                        className="btn mt-4 btn-neutral"
+                    <Button
+                        className="mt-4"
                         disabled={!email || !password}
                         onClick={() => handleSignIn({ email, password })}
                     >
                         Login
-                    </button>
+                    </Button>
                 </fieldset>
             </Card>
         </>
