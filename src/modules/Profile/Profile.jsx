@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 
 import { useSelector } from 'react-redux'
 
@@ -6,10 +6,15 @@ import { Loading } from '@CoreUI'
 import { UserCard } from '@Feed/UserCard'
 import { UserProfileForm } from '@Profile/UserProfileForm'
 
+import { calculateAge } from 'src/utils'
+
 export const Profile = () => {
     const { user } = useSelector((state) => state.auth)
     const [updatedUser, setUpdatedUser] = useState(user)
-    const { about, age, firstName, gender, lastName, photoUrl } = updatedUser || {}
+    const { about, dob, firstName, gender, lastName, photoUrl } = updatedUser || {}
+    const age = useMemo(() => calculateAge(dob), [dob])
+
+    const dpRef = useRef()
 
     const handleChangeUser = (fieldData) => {
         setUpdatedUser((prev) => ({ ...user, ...prev, ...fieldData }))
@@ -18,12 +23,13 @@ export const Profile = () => {
     return (
         <Loading isLoading={!user}>
             <div className="flex justify-center gap-16">
-                <UserProfileForm isCenter onChangeUser={handleChangeUser} user={user} />
+                <UserProfileForm isCenter dpRef={dpRef} onChangeUser={handleChangeUser} user={user} />
                 <UserCard
                     {...user}
                     noAction
                     about={about ?? user?.about}
                     age={age ?? user?.age}
+                    dpRef={dpRef}
                     firstName={firstName ?? user?.firstName}
                     gender={gender ?? user?.gender}
                     lastName={lastName ?? user?.lastName}

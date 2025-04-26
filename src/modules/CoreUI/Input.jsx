@@ -1,27 +1,27 @@
 export const Input = ({
-    error,
-    input,
-    label,
+    errorProps,
+    inputProps,
+    labelProps,
     name = '',
     onChange,
     onClick,
-    optional,
+    optionalProps,
     placeholder = 'Enter a value',
     ref,
     type = 'text',
     value = '',
 }) => {
-    const { className: labelClassName = '', content: labelContent } = label || {}
-    const { className: optionalClassName = '', content: optionalContent = 'Optional' } = optional || {}
-    const { className: inputClassName = '' } = input || {}
-    const { className: errorClassName = '', content: errorContent } = error || {}
+    const { className: labelClassName = '', content: labelContent } = labelProps || {}
+    const { className: optionalClassName = '', content: optionalContent = 'Optional' } = optionalProps || {}
+    const { className: inputClassName = '' } = inputProps || {}
+    const { className: errorClassName = '', content: errorContent } = errorProps || {}
 
     const handleChange = (e) => onChange?.(e)
     const handleClick = (e) => onClick?.(e)
 
     return (
         <fieldset className="fieldset">
-            {label ? <label className={`fieldset-label ${labelClassName}`}>{labelContent}</label> : null}
+            {labelProps ? <label className={`fieldset-label ${labelClassName}`}>{labelContent}</label> : null}
             <input
                 className={`input ${type === 'fileInput' ? 'file-input' : ''} ${inputClassName}`}
                 name={name}
@@ -31,9 +31,10 @@ export const Input = ({
                 ref={ref}
                 type={type}
                 value={value}
+                {...inputProps}
             />
-            {optional ? <p className={`label ${optionalClassName}`}>{optionalContent}</p> : null}
-            {error ? <span className={`text-red-400 ${errorClassName}`}>{errorContent}</span> : null}
+            {optionalProps ? <p className={`label ${optionalClassName}`}>{optionalContent}</p> : null}
+            {errorProps ? <span className={`text-red-400 ${errorClassName}`}>{errorContent}</span> : null}
         </fieldset>
     )
 }

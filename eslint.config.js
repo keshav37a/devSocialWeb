@@ -36,7 +36,7 @@ export default defineConfig([
             eqeqeq: ['error', 'always'],
             'no-console': 'warn',
             'no-var': 'warn',
-            'no-undef': 'warn',
+            'no-undef': 'error',
             'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]' }],
             'prefer-const': 'warn',
             'prettier/prettier': 'error',

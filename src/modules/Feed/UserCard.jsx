@@ -1,6 +1,7 @@
 export const UserCard = ({
     about,
     age,
+    dpRef,
     gender,
     noAction,
     isCenter = true,
@@ -13,7 +14,7 @@ export const UserCard = ({
         <div className={`${isCenter ? 'flex justify-center' : ''}`}>
             <div className="card w-96 bg-base-300 shadow-sm">
                 <figure>
-                    <img alt="Shoes" src={photoUrl} />
+                    <img alt="profile-pic" ref={dpRef} src={photoUrl} />
                 </figure>
                 <div className="card-body">
                     <h2 className="card-title break-all">{fullName || `${firstName} ${lastName}`}</h2>

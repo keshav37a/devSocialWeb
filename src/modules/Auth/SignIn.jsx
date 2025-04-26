@@ -37,19 +37,19 @@ export const SignIn = () => {
                 <fieldset className="fieldset w-xs">
                     <legend className="fieldset-legend">Login</legend>
                     <Input
-                        label={{ content: 'Email' }}
+                        labelProps={{ content: 'Email' }}
                         onChange={handleChangeEmail}
                         placeholder="Email"
                         type="email"
                         value={email}
                     />
                     <Input
-                        error={
+                        errorProps={
                             (errorMessage && statusCode === 400) || statusCode === 404
                                 ? { content: errorMessage }
                                 : null
                         }
-                        label={{ content: 'Password' }}
+                        labelProps={{ content: 'Password' }}
                         onChange={handleChangePassword}
                         placeholder="Password"
                         type="password"

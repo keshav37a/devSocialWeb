@@ -22,7 +22,7 @@ export const formatDate = (dateObj) => {
     const date = dateObj.getDate()
 
     const dateString = date > 9 ? date : `0${date}`
-    const monthString = month > 9 ? `0${month + 1}` : month + 1
+    const monthString = month > 9 ? month + 1 : `0${month + 1}`
     const yearString = dateObj.getFullYear()
 
     return {
@@ -32,4 +32,21 @@ export const formatDate = (dateObj) => {
         displayDate: `${dateString}-${monthString}-${yearString}`,
         formattedDate: `${yearString}-${monthString}-${dateString}`,
     }
+}
+
+export const calculateAge = (dob) => {
+    if (!dob) {
+        return null
+    }
+    const today = new Date()
+    const birthDate = new Date(dob)
+
+    let age = today.getFullYear() - birthDate.getFullYear()
+    const monthDiff = today.getMonth() - birthDate.getMonth()
+    const dayDiff = today.getDate() - birthDate.getDate()
+
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--
+    }
+    return age
 }

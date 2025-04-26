@@ -42,7 +42,7 @@ export const DatePicker = ({
     return (
         <>
             <Input
-                label={{ content: 'Date of birth' }}
+                labelProps={{ content: 'Date of birth' }}
                 onClick={handleShowCalendar}
                 placeholder="Enter your date of birth"
                 ref={inputRef}
@@ -52,7 +52,7 @@ export const DatePicker = ({
             <div className="relative">
                 {showCalendar ? (
                     <div
-                        className="absolute top-0 left-0 mx-auto max-w-sm rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800"
+                        className="absolute top-0 left-0 z-5 mx-auto max-w-sm rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800"
                         ref={dayPickerRef}
                     >
                         <div className="">
