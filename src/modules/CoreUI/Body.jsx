@@ -34,17 +34,21 @@ export const Body = () => {
         }
         if (data?.user && status?.success && !user && token) {
             dispatch(signInUser(data.user))
+            if (pathname.includes('signin')) {
+                navigate('/feed')
+            }
         }
     }, [pathname, dispatch, error, user, data?.user, status?.success, navigate])
 
     return (
-        <>
-            {isUserProfileLoading ? <Loading /> : null}
-            <Navbar />
-            <div className="p-8">
-                <Outlet />
+        <Loading isLoading={isUserProfileLoading}>
+            <div className="flex min-h-screen flex-col">
+                <Navbar />
+                <div className="p-8">
+                    <Outlet />
+                </div>
+                <Footer />
             </div>
-            <Footer />
-        </>
+        </Loading>
     )
 }

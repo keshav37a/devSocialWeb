@@ -1,4 +1,4 @@
-export const Button = ({ className, children, disabled, onClick, label }) => {
+export const Button = ({ className, children, disabled, label, onClick }) => {
     const handleClick = (e) => onClick?.(e)
 
     return (

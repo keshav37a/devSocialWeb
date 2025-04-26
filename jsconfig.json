@@ -7,6 +7,8 @@
             "@CoreUI/*": ["src/modules/CoreUI/*"],
             "@Feed/*": ["src/modules/Feed/*"],
             "@Profile/*": ["src/modules/Profile/*"],
+            "hooks/*": ["src/hooks/*"],
+            "icons/*": ["src/icons/*"],
             "modules/*": ["src/modules/*"],
             "services": ["src/services/*"],
             "src/*": ["src/*"]

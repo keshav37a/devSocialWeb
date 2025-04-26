@@ -1,6 +1,6 @@
 export const Footer = () => {
     return (
-        <footer className="footer-center fixed bottom-0 footer footer-horizontal rounded bg-base-300 p-10 text-base-content">
+        <footer className="footer-center footer footer-horizontal rounded bg-base-300 p-10 text-base-content">
             <nav className="grid grid-flow-col gap-4">
                 <a className="link link-hover">About us</a>
                 <a className="link link-hover">Contact</a>

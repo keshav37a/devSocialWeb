@@ -8,6 +8,8 @@ import { useSignOutMutation } from 'services/apiSlice'
 
 import { deleteCookie } from 'src/utils'
 
+const defaultPhotoUrl = 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+
 export const Navbar = () => {
     const { user } = useSelector((state) => state.auth)
     const navigate = useNavigate()
@@ -40,14 +42,11 @@ export const Navbar = () => {
                             <span className="mr-6 text-sm">Welcome, {user.firstName}</span>
                             <div className="btn avatar btn-circle btn-ghost" role="button" tabIndex={0}>
                                 <div className="w-10 rounded-full">
-                                    <img
-                                        alt="Tailwind CSS Navbar component"
-                                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                                    />
+                                    <img alt="Tailwind CSS Navbar component" src={user?.photoUrl || defaultPhotoUrl} />
                                 </div>
                             </div>
                             <ul
-                                className="dropdown-content menu z-1 mt-3 w-52 menu-sm rounded-box bg-base-300 p-2 shadow"
+                                className="ring-opacity-5 dropdown-content menu z-1 mt-3 w-52 menu-sm rounded-box bg-base-300 p-2 shadow ring-1 ring-black"
                                 tabIndex={0}
                             >
                                 <li>

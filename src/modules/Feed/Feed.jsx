@@ -22,20 +22,21 @@ export const Feed = () => {
     }, [dispatch, data])
 
     return (
-        <div className="feed">
-            {isLoading ? <Loading /> : null}
-            {feed
-                ? feed.map(({ _id, about, age, fullName, gender, photoUrl }) => (
-                      <UserCard
-                          about={about}
-                          age={age}
-                          fullName={fullName}
-                          gender={gender}
-                          key={_id}
-                          photoUrl={photoUrl}
-                      />
-                  ))
-                : null}
-        </div>
+        <Loading isLoading={isLoading}>
+            <div className="feed">
+                {feed
+                    ? feed.map(({ _id, about, age, fullName, gender, photoUrl }) => (
+                          <UserCard
+                              about={about}
+                              age={age}
+                              fullName={fullName}
+                              gender={gender}
+                              key={_id}
+                              photoUrl={photoUrl}
+                          />
+                      ))
+                    : null}
+            </div>
+        </Loading>
     )
 }

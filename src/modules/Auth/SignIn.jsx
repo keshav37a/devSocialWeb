@@ -32,8 +32,7 @@ export const SignIn = () => {
     }, [data, dispatch, navigate, status])
 
     return (
-        <>
-            {isSignInLoading ? <Loading /> : null}
+        <Loading isLoading={isSignInLoading}>
             <Card isCenter className="mt-16">
                 <fieldset className="fieldset w-xs">
                     <legend className="fieldset-legend">Login</legend>
@@ -65,6 +64,6 @@ export const SignIn = () => {
                     </Button>
                 </fieldset>
             </Card>
-        </>
+        </Loading>
     )
 }

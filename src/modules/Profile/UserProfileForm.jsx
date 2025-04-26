@@ -2,25 +2,57 @@ import { useEffect, useState } from 'react'
 
 import { useDispatch } from 'react-redux'
 
-import { Button, Card, Input } from '@CoreUI'
-import { TextArea } from '@CoreUI/TextArea'
+import { Button, Card, DatePicker, Dropdown, Input, TextArea } from '@CoreUI'
 
 import { signInUser } from '@Auth/authSlice'
 import { useEditUserProfileMutation } from 'services/apiSlice'
 
-export const UserProfileForm = ({ isCenter, user }) => {
+import { formatDate } from 'src/utils'
+
+export const UserProfileForm = ({ isCenter, onChangeUser, user }) => {
     const dispatch = useDispatch()
-    const { firstName: existingFirstName, lastName: existingLastName, about: existingAbout } = user || {}
+    const {
+        firstName: existingFirstName,
+        lastName: existingLastName,
+        about: existingAbout,
+        genderOptionsDisplay,
+        gender: existingGender,
+    } = user || {}
+    const { formattedDate: existingDOB } = formatDate(user?.dob)
 
     const [firstName, setFirstName] = useState(existingFirstName ?? '')
     const [lastName, setLastName] = useState(existingLastName ?? '')
     const [about, setAbout] = useState(existingAbout ?? '')
+    const [gender, setGender] = useState(existingGender ?? '')
+    const [dob, setDob] = useState(existingDOB ?? '')
 
-    const handleFirstNameChange = (e) => setFirstName(e.target.value)
-    const handleLastNameChange = (e) => setLastName(e.target.value)
-    const handleAboutChange = (e) => setAbout(e.target.value)
+    const handleFirstNameChange = (e) => {
+        setFirstName(e.target.value)
+        onChangeUser({ firstName: e.target.value })
+    }
+    const handleLastNameChange = (e) => {
+        setLastName(e.target.value)
+        onChangeUser({ lastName: e.target.value })
+    }
+    const handleAboutChange = (e) => {
+        setAbout(e.target.value)
+        onChangeUser({ about: e.target.value })
+    }
+    const handleGenderChange = ({ value }) => {
+        setGender(value)
+        onChangeUser({ gender: value })
+    }
+    const handleDateChange = (date) => {
+        setDob(date)
+        onChangeUser({ dob: date })
+    }
 
-    const isFormValid = firstName !== existingFirstName || lastName !== existingLastName || about !== existingAbout
+    const isFormValid =
+        firstName !== existingFirstName ||
+        lastName !== existingLastName ||
+        about !== existingAbout ||
+        gender !== existingGender ||
+        dob !== existingDOB
 
     const [handleEditUserProfile, { data: editedUserProfileData }] = useEditUserProfileMutation()
     const { data, status } = editedUserProfileData || {}
@@ -48,11 +80,22 @@ export const UserProfileForm = ({ isCenter, user }) => {
                     value={lastName}
                 />
                 <TextArea label={{ content: 'About' }} name="About" onChange={handleAboutChange} value={about} />
+                <Dropdown
+                    displayItemLabelKey="displayName"
+                    initialSelectedValue={gender}
+                    items={genderOptionsDisplay}
+                    label={{ content: 'Gender' }}
+                    onChange={handleGenderChange}
+                />
+                <DatePicker
+                    currentDate={existingDOB ? new Date(existingDOB) : new Date()}
+                    onDateChange={handleDateChange}
+                />
                 <Button
                     className={'mt-4'}
                     disabled={!isFormValid}
                     label="Save"
-                    onClick={() => handleEditUserProfile({ firstName, lastName, about })}
+                    onClick={() => handleEditUserProfile({ firstName, lastName, about, gender, dob })}
                 />
             </fieldset>
         </Card>

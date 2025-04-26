@@ -1,6 +1,8 @@
 export { Body } from './Body'
 export { Button } from './Button'
 export { Card } from './Card'
+export { DatePicker } from './DatePicker'
+export { Dropdown } from './Dropdown'
 export { Footer } from './Footer'
 export { Input } from './Input'
 export { Loading } from './Loading'
