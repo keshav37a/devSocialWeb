@@ -7,6 +7,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router'
 import { store } from './store'
 
 import { SignIn } from '@Auth'
+import { Connections } from '@Connections'
 import { Body, Toast } from '@CoreUI'
 import { Feed } from '@Feed'
 import { Profile } from '@Profile'
@@ -19,16 +20,20 @@ const router = createBrowserRouter([
         element: <Body />,
         children: [
             {
-                path: '/signin',
-                element: <SignIn />,
+                path: '/feed',
+                element: <Feed />,
+            },
+            {
+                path: '/connections',
+                element: <Connections />,
             },
             {
                 path: '/profile',
                 element: <Profile />,
             },
             {
-                path: '/feed',
-                element: <Feed />,
+                path: '/signin',
+                element: <SignIn />,
             },
         ],
     },

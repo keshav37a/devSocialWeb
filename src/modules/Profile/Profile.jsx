@@ -29,6 +29,7 @@ export const Profile = () => {
                     noAction
                     about={about ?? user?.about}
                     age={age ?? user?.age}
+                    cardProps={{ cardProps: { className: 'w-96' } }}
                     dpRef={dpRef}
                     firstName={firstName ?? user?.firstName}
                     gender={gender ?? user?.gender}

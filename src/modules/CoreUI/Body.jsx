@@ -42,9 +42,9 @@ export const Body = () => {
 
     return (
         <Loading isLoading={isUserProfileLoading}>
-            <div className="flex min-h-screen flex-col">
+            <div className="flex flex-col">
                 <Navbar />
-                <div className="p-8">
+                <div className="min-h-screen p-8">
                     <Outlet />
                 </div>
                 <Footer />

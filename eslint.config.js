@@ -134,6 +134,7 @@ export default defineConfig([
                 alias: {
                     map: [
                         ['@Auth', './src/modules/Auth'],
+                        ['@Connections', './src/modules/Connections'],
                         ['@CoreUI', './src/modules/CoreUI'],
                         ['@Feed', './src/modules/Feed'],
                         ['@Profile', './src/modules/Profile'],

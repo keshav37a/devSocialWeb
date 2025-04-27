@@ -50,3 +50,10 @@ export const calculateAge = (dob) => {
     }
     return age
 }
+
+export const getGenderDisplayName = (gender) => {
+    if (!gender) {
+        return ''
+    }
+    return gender.charAt(0).toUpperCase() + gender.slice(1)
+}

@@ -9,6 +9,28 @@ export const apiSlice = createApi({
         credentials: 'include',
     }),
     endpoints: (build) => ({
+        editUserProfile: build.mutation({
+            query: (updatedUserProfile) => ({
+                url: '/profile/edit',
+                method: 'PATCH',
+                body: updatedUserProfile,
+            }),
+        }),
+        getUserConnections: build.query({
+            query: () => ({
+                url: '/connection-request/connections',
+            }),
+        }),
+        getUserFeed: build.query({
+            query: () => ({
+                url: '/user/feed',
+            }),
+        }),
+        getUserProfile: build.query({
+            query: () => ({
+                url: '/profile/view',
+            }),
+        }),
         signIn: build.mutation({
             query: (credentials) => ({
                 url: '/auth/signin',
@@ -22,30 +44,14 @@ export const apiSlice = createApi({
                 method: 'POST',
             }),
         }),
-        getUserFeed: build.query({
-            query: () => ({
-                url: '/user/feed',
-            }),
-        }),
-        getUserProfile: build.query({
-            query: () => ({
-                url: '/profile/view',
-            }),
-        }),
-        editUserProfile: build.mutation({
-            query: (updatedUserProfile) => ({
-                url: '/profile/edit',
-                method: 'PATCH',
-                body: updatedUserProfile,
-            }),
-        }),
     }),
 })
 
 export const {
+    useEditUserProfileMutation,
+    useGetUserConnectionsQuery,
     useGetUserFeedQuery,
     useGetUserProfileQuery,
     useSignInMutation,
     useSignOutMutation,
-    useEditUserProfileMutation,
 } = apiSlice

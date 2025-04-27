@@ -111,7 +111,7 @@ export const UserProfileForm = ({ dpRef, isCenter, onChangeUser, user }) => {
 
     return (
         <>
-            {isLoading ? <Loading /> : null}
+            <Loading isLoading={isLoading} />
             <Card isCenter={isCenter}>
                 <p className="text-center">Update user profile</p>
                 <fieldset className="fieldset w-xs">

@@ -10,6 +10,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@Auth': path.resolve(__dirname, './src/modules/Auth'),
+            '@Connections': path.resolve(__dirname, './src/modules/Connections'),
             '@CoreUI': path.resolve(__dirname, './src/modules/CoreUI'),
             '@Profile': path.resolve(__dirname, './src/modules/Profile'),
             '@Feed': path.resolve(__dirname, './src/modules/Feed'),

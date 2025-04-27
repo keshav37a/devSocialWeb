@@ -1,38 +1,37 @@
-import { Button, Image } from '@CoreUI'
+import { Button, Card, Image } from '@CoreUI'
+
+import { getGenderDisplayName } from 'src/utils'
 
 export const UserCard = ({
     about,
     age,
+    cardProps,
     dpRef,
-    gender,
-    noAction,
-    isCenter = true,
     firstName,
     fullName,
+    gender,
+    isCenter = true,
     lastName,
+    noAction,
     photoUrl,
 }) => {
     return (
-        <div className={`max-h-120 ${isCenter ? 'flex justify-center' : ''}`}>
-            <div className="card w-96 bg-base-300 shadow-sm">
-                <Image
-                    alt="profile-pic"
-                    className="h-50 max-h-50"
-                    imgProps={{ className: 'h-full', ref: dpRef }}
-                    src={photoUrl}
-                />
-                <div className="card-body">
-                    <h2 className="card-title break-all">{fullName || `${firstName} ${lastName}`}</h2>
-                    <p>Age: {age} years</p>
-                    <p>Gender: {gender.charAt(0).toUpperCase() + gender.slice(1)}</p>
-                    <p className="break-all">{about}</p>
+        <Card containerProps={{ className: 'max-h-120' }} isCenter={isCenter} {...cardProps}>
+            <Image
+                alt="profile-pic"
+                className="h-50 max-h-50"
+                imgProps={{ className: 'h-full', ref: dpRef }}
+                src={photoUrl}
+            />
+            <h2 className="card-title break-all">{fullName || `${firstName} ${lastName}`}</h2>
+            <p>Age: {age} years</p>
+            <p>Gender: {getGenderDisplayName(gender)}</p>
+            <p className="break-all">{about}</p>
 
-                    <div className="card-actions flex flex-row justify-evenly">
-                        <Button className="grow btn-primary" disabled={noAction} label="Interested" />
-                        <Button className="grow btn-secondary" disabled={noAction} label="Ignore" />
-                    </div>
-                </div>
+            <div className="card-actions flex flex-row justify-evenly">
+                <Button className="grow btn-primary" disabled={noAction} label="Interested" />
+                <Button className="grow btn-secondary" disabled={noAction} label="Ignore" />
             </div>
-        </div>
+        </Card>
     )
 }
