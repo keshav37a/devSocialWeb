@@ -3,6 +3,8 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router'
 
+import { Image } from '@CoreUI'
+
 import { signOutUser } from '@Auth/authSlice'
 import { useSignOutMutation } from 'services/apiSlice'
 
@@ -41,9 +43,12 @@ export const Navbar = () => {
                         <>
                             <span className="mr-6 text-sm">Welcome, {user.firstName}</span>
                             <div className="btn avatar btn-circle btn-ghost" role="button" tabIndex={0}>
-                                <div className="w-10 rounded-full">
-                                    <img alt="Tailwind CSS Navbar component" src={user?.photoUrl || defaultPhotoUrl} />
-                                </div>
+                                <Image
+                                    alt="user-profile-pic"
+                                    className="w-10"
+                                    imgProps={{ className: 'rounded-full' }}
+                                    src={user?.photoUrl || defaultPhotoUrl}
+                                />
                             </div>
                             <ul
                                 className="ring-opacity-5 dropdown-content menu z-1 mt-3 w-52 menu-sm rounded-box bg-base-300 p-2 shadow ring-1 ring-black"
