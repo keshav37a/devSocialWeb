@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { Button, Card, DatePicker, Dropdown, FileSelect, Input, Loading, TextArea } from '@CoreUI'
 
 import { signInUser } from '@Auth/authSlice'
+import { showToast } from '@CoreUI/coreUISlice'
 import { useEditUserProfileMutation } from 'services/apiSlice'
 
 import { formatDate } from 'src/utils'
@@ -78,18 +79,31 @@ export const UserProfileForm = ({ dpRef, isCenter, onChangeUser, user }) => {
 
     const handleEditUserProfileForm = () => {
         const formData = new FormData()
-        formData.append('profilePic', profileImageFile)
-        formData.append('firstName', firstName)
-        formData.append('lastName', lastName)
-        formData.append('about', about)
-        formData.append('gender', gender)
-        formData.append('dob', dob)
+        if (profileImageFile) {
+            formData.append('profilePic', profileImageFile)
+        }
+        if (firstName !== existingFirstName) {
+            formData.append('firstName', firstName)
+        }
+        if (lastName !== existingLastName) {
+            formData.append('lastName', lastName)
+        }
+        if (about !== existingAbout) {
+            formData.append('about', about)
+        }
+        if (gender !== existingGender) {
+            formData.append('gender', gender)
+        }
+        if (dob !== existingDOB) {
+            formData.append('dob', dob)
+        }
         handleEditUserProfile(formData)
     }
 
     useEffect(() => {
         if (data?.user && status?.statusCode === 200) {
             dispatch(signInUser(data.user))
+            dispatch(showToast({ content: 'User profile updated successfully' }))
             setProfileImageFile(null)
             dpRef.current.src = data?.user?.photoUrl
         }

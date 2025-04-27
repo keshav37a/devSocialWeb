@@ -7,7 +7,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router'
 import { store } from './store'
 
 import { SignIn } from '@Auth'
-import { Body } from '@CoreUI'
+import { Body, Toast } from '@CoreUI'
 import { Feed } from '@Feed'
 import { Profile } from '@Profile'
 
@@ -37,7 +37,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
     <StrictMode>
         <Provider store={store}>
-            <RouterProvider router={router} />
+            <Toast>
+                <RouterProvider router={router} />
+            </Toast>
         </Provider>
     </StrictMode>
 )
