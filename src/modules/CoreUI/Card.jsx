@@ -4,7 +4,7 @@ export const Card = ({ containerProps, cardProps, cardBodyProps, isCenter, child
     const { className: cardBodyClassName = '' } = cardBodyProps || {}
     return (
         <div className={`card-container ${containerClassName} ${isCenter ? 'flex items-center justify-center' : ''}`}>
-            <div className={`card bg-base-300 text-primary-content ${cardClassName}`}>
+            <div className={`card h-full bg-base-300 text-primary-content ${cardClassName}`}>
                 <div className={`card-body ${cardBodyClassName}`}>{children}</div>
             </div>
         </div>

@@ -18,9 +18,9 @@ export const UserCard = ({
     return (
         <Card containerProps={{ className: 'max-h-120' }} isCenter={isCenter} {...cardProps}>
             <Image
-                alt="profile-pic"
+                alt="user-profile-pic"
                 className="h-50 max-h-50"
-                imgProps={{ className: 'h-full', ref: dpRef }}
+                imgProps={{ className: 'object-contain', ref: dpRef }}
                 src={photoUrl}
             />
             <h2 className="card-title break-all">{fullName || `${firstName} ${lastName}`}</h2>

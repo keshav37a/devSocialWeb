@@ -45,7 +45,7 @@ export const Navbar = () => {
                             <div className="btn avatar btn-circle btn-ghost" role="button" tabIndex={0}>
                                 <Image
                                     alt="user-profile-pic"
-                                    className="w-10"
+                                    className="h-10 w-10"
                                     imgProps={{ className: 'rounded-full' }}
                                     src={user?.photoUrl || defaultPhotoUrl}
                                 />

@@ -2,13 +2,11 @@ import { useEffect } from 'react'
 
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Image, Loading } from '@CoreUI'
-import { Card } from '@CoreUI/Card'
+import { UserConnectionCard } from '@Connections/UserConnectionCard'
+import { Loading } from '@CoreUI'
 
 import { addConnections } from '@Connections/connectionsSlice'
 import { useGetUserConnectionsQuery } from 'services/apiSlice'
-
-import { getGenderDisplayName } from 'src/utils'
 
 export const Connections = () => {
     const { connections } = useSelector((state) => state.connections)
@@ -26,20 +24,14 @@ export const Connections = () => {
         <Loading isLoading={isLoading}>
             {connections
                 ? connections?.map(({ _id, about, age, fullName, gender, photoUrl }) => (
-                      <Card
-                          isCenter
-                          cardBodyProps={{ className: 'flex-row' }}
-                          cardProps={{ className: 'w-[60%]' }}
-                          containerProps={{ className: 'mb-4 flex flex-col' }}
+                      <UserConnectionCard
+                          about={about}
+                          age={age}
+                          fullName={fullName}
+                          gender={gender}
                           key={_id}
-                      >
-                          <Image className="mr-4 h-25 w-25 rounded-full" src={photoUrl} />
-                          <div className="user-content">
-                              <h2 className="card-title">{fullName}</h2>
-                              <p>{`${age}, ${getGenderDisplayName(gender)}`}</p>
-                              <p className="mt-2">{about}</p>
-                          </div>
-                      </Card>
+                          photoUrl={photoUrl}
+                      />
                   ))
                 : null}
         </Loading>

@@ -33,6 +33,7 @@ export const Profile = () => {
                     dpRef={dpRef}
                     firstName={firstName ?? user?.firstName}
                     gender={gender ?? user?.gender}
+                    isCenter={false}
                     lastName={lastName ?? user?.lastName}
                     photoUrl={photoUrl ?? user?.photoUrl}
                 />
