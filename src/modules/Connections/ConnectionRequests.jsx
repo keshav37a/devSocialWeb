@@ -5,11 +5,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { UserConnectionCard } from '@Connections/UserConnectionCard'
 import { Loading } from '@CoreUI'
 
-import { addConnectionRequests } from '@ConnectionRequests/connectionRequestsSlice'
-import { useGetUserConnectionRequestsQuery } from 'services/apiSlice'
+import { addConnectionRequests } from '@Connections/connectionsSlice'
+
+import { useGetUserConnectionRequestsQuery } from '@Connections/connectionsApi'
 
 export const ConnectionRequests = () => {
-    const { connectionRequests } = useSelector((state) => state.connectionRequests)
+    const { connectionRequests } = useSelector((state) => state.connections)
     const { data, isLoading } = useGetUserConnectionRequestsQuery()
     const dispatch = useDispatch()
 

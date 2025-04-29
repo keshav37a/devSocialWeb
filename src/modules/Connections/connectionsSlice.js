@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     connections: null,
+    connectionRequests: null,
 }
 
 const connectionsSlice = createSlice({
@@ -11,9 +12,12 @@ const connectionsSlice = createSlice({
         addConnections: (state, { payload }) => {
             state.connections = payload
         },
+        addConnectionRequests: (state, { payload }) => {
+            state.connectionRequests = payload
+        },
     },
 })
 
-export const { addConnections } = connectionsSlice.actions
+export const { addConnections, addConnectionRequests } = connectionsSlice.actions
 
 export default connectionsSlice.reducer

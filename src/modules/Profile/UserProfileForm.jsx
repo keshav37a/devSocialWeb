@@ -6,7 +6,8 @@ import { Button, Card, DatePicker, Dropdown, FileSelect, Input, Loading, TextAre
 
 import { signInUser } from '@Auth/authSlice'
 import { showToast } from '@CoreUI/coreUISlice'
-import { useEditUserProfileMutation } from 'services/apiSlice'
+
+import { useEditUserProfileMutation } from '@Profile/userProfileApi'
 
 import { formatDate } from 'src/utils'
 

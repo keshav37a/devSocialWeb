@@ -6,7 +6,8 @@ import { Outlet, useLocation, useNavigate } from 'react-router'
 import { Footer, Loading, Navbar } from '@CoreUI'
 
 import { signInUser } from '@Auth/authSlice'
-import { useGetUserProfileQuery } from 'services/apiSlice'
+
+import { useGetUserProfileQuery } from '@Profile/userProfileApi'
 
 import { getCookieValue } from 'src/utils'
 

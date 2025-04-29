@@ -6,7 +6,8 @@ import { UserConnectionCard } from '@Connections/UserConnectionCard'
 import { Loading } from '@CoreUI'
 
 import { addConnections } from '@Connections/connectionsSlice'
-import { useGetUserConnectionsQuery } from 'services/apiSlice'
+
+import { useGetUserConnectionsQuery } from '@Connections/connectionsApi'
 
 export const Connections = () => {
     const { connections } = useSelector((state) => state.connections)

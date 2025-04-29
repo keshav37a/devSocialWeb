@@ -7,7 +7,8 @@ import { Card, Input, Loading } from '@CoreUI'
 import { Button } from '@CoreUI/Button'
 
 import { signInUser } from '@Auth/authSlice'
-import { useSignInMutation } from 'services/apiSlice'
+
+import { useSignInMutation } from '@Auth/authApi'
 
 export const SignIn = () => {
     const [email, setEmail] = useState('admin@gmail.com')

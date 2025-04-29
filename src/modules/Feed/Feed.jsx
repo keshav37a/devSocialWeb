@@ -6,7 +6,8 @@ import { Loading } from '@CoreUI'
 import { UserCard } from '@Feed/UserCard'
 
 import { addFeed } from '@Feed/feedSlice'
-import { useGetUserFeedQuery } from 'services/apiSlice'
+
+import { useGetUserFeedQuery } from '@Feed/feedApi'
 
 export const Feed = () => {
     const { user } = useSelector((state) => state.auth)

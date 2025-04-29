@@ -100,6 +100,11 @@ export default defineConfig([
                             position: 'after',
                         },
                         {
+                            pattern: '*/*Api',
+                            group: 'internal',
+                            position: 'after',
+                        },
+                        {
                             pattern: 'services',
                             group: 'internal',
                             position: 'after',
@@ -135,7 +140,6 @@ export default defineConfig([
                     map: [
                         ['@Auth', './src/modules/Auth'],
                         ['@Connections', './src/modules/Connections'],
-                        ['@ConnectionRequests', './src/modules/ConnectionRequests'],
                         ['@CoreUI', './src/modules/CoreUI'],
                         ['@Feed', './src/modules/Feed'],
                         ['@Profile', './src/modules/Profile'],

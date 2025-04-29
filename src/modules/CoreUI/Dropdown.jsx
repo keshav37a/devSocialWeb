@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { Button } from '@CoreUI/Button'
 import { ChevronDownIcon } from 'icons'
 
 export const Dropdown = ({
@@ -57,13 +58,13 @@ export const Dropdown = ({
                         {items?.map((item, index) => {
                             const { id, _id, value, ...restProps } = item
                             return (
-                                <button
+                                <Button
                                     className={`w-full cursor-pointer px-4 py-2 text-left text-sm text-[#EDF1FE] hover:bg-[#2b2f37] ${index === 0 ? 'hover:rounded-t-2xl' : ''} ${index === items.length - 1 ? 'hover:rounded-b-2xl' : ''}`}
                                     key={id || _id || value}
                                     onClick={() => handleChangeDropdownValue(item)}
                                 >
                                     {displayItemLabelKey ? restProps[displayItemLabelKey] : String(item)}
-                                </button>
+                                </Button>
                             )
                         })}
                     </div>
