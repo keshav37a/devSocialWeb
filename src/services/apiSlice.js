@@ -21,6 +21,11 @@ export const apiSlice = createApi({
                 url: '/connection-request/connections',
             }),
         }),
+        getUserConnectionRequests: build.query({
+            query: () => ({
+                url: '/connection-request/review-requests',
+            }),
+        }),
         getUserFeed: build.query({
             query: () => ({
                 url: '/user/feed',
@@ -50,6 +55,7 @@ export const apiSlice = createApi({
 export const {
     useEditUserProfileMutation,
     useGetUserConnectionsQuery,
+    useGetUserConnectionRequestsQuery,
     useGetUserFeedQuery,
     useGetUserProfileQuery,
     useSignInMutation,

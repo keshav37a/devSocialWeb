@@ -55,8 +55,18 @@ export const Navbar = () => {
                                 tabIndex={0}
                             >
                                 <li>
+                                    <Link className="justify-between" to="/feed">
+                                        Feed
+                                    </Link>
+                                </li>
+                                <li>
                                     <Link className="justify-between" to="/connections">
                                         Connections
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link className="justify-between" to="/connection-requests">
+                                        Requests
                                     </Link>
                                 </li>
                                 <li>

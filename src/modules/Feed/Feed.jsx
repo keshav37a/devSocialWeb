@@ -29,6 +29,7 @@ export const Feed = () => {
                           <UserCard
                               about={about}
                               age={age}
+                              cardProps={{ containerProps: { className: 'mb-6' } }}
                               fullName={fullName}
                               gender={gender}
                               key={_id}
