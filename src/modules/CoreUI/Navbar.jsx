@@ -5,8 +5,9 @@ import { Link, useNavigate } from 'react-router'
 
 import { Image } from '@CoreUI'
 
-import { useSignOutMutation } from '@Auth/authApi'
 import { signOutUser } from '@Auth/authSlice'
+
+import { useSignOutMutation } from '@Auth/authApi'
 
 import { deleteCookie } from 'src/utils'
 

@@ -5,27 +5,43 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Loading } from '@CoreUI'
 import { UserCard } from '@Feed/UserCard'
 
-import { addFeed } from '@Feed/feedSlice'
+import { showToast, TOAST_TYPES } from '@CoreUI/coreUISlice'
 
+import { useSendConnectionRequestMutation } from '@Connections/connectionsApi'
 import { useGetUserFeedQuery } from '@Feed/feedApi'
 
 export const Feed = () => {
-    const { user } = useSelector((state) => state.auth)
-    const { data, isLoading } = useGetUserFeedQuery(null, { skip: !user })
-    const { feed } = useSelector((state) => state.feed)
     const dispatch = useDispatch()
+    const { user } = useSelector((state) => state.auth)
+    const { data: feed, isLoading } = useGetUserFeedQuery(null, { skip: !user })
+    const [handleSendConnectionRequest, { data: sendConnectionRequestData, error: sendConnectionRequestError }] =
+        useSendConnectionRequestMutation()
 
     useEffect(() => {
-        const feedArr = data?.data?.feed
-        if (feedArr && feedArr.length > 0) {
-            dispatch(addFeed(feedArr))
+        if (sendConnectionRequestError) {
+            dispatch(
+                showToast({
+                    content:
+                        (sendConnectionRequestError?.message || sendConnectionRequestError?.error) ??
+                        'Something went wrong',
+                    type: TOAST_TYPES.ERROR,
+                })
+            )
         }
-    }, [dispatch, data])
+    }, [sendConnectionRequestError, dispatch])
+
+    useEffect(() => {
+        if (sendConnectionRequestData) {
+            dispatch(
+                dispatch(showToast({ content: 'Connection request sent successfully', type: TOAST_TYPES.SUCCESS }))
+            )
+        }
+    }, [sendConnectionRequestData, dispatch])
 
     return (
         <Loading isLoading={isLoading}>
             <div className="feed">
-                {feed
+                {feed && feed.length > 0
                     ? feed.map(({ _id, about, age, fullName, gender, photoUrl }) => (
                           <UserCard
                               about={about}
@@ -34,7 +50,9 @@ export const Feed = () => {
                               fullName={fullName}
                               gender={gender}
                               key={_id}
+                              onSendRequest={handleSendConnectionRequest}
                               photoUrl={photoUrl}
+                              userId={_id}
                           />
                       ))
                     : null}

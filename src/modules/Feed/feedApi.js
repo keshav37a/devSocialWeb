@@ -6,6 +6,7 @@ export const feedApi = apiSlice.injectEndpoints({
             query: () => ({
                 url: '/user/feed',
             }),
+            transformResponse: (response) => response?.data?.feed,
         }),
     }),
 })

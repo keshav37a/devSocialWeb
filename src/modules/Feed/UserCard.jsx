@@ -13,8 +13,15 @@ export const UserCard = ({
     isCenter = true,
     lastName,
     noAction,
+    onSendRequest,
     photoUrl,
+    userId,
 }) => {
+    const handleSendConnectionRequest =
+        ({ status }) =>
+        () =>
+            onSendRequest?.({ status, userId })
+
     return (
         <Card containerProps={{ className: 'max-h-120' }} isCenter={isCenter} {...cardProps}>
             <Image
@@ -29,8 +36,18 @@ export const UserCard = ({
             <p className="break-all">{about}</p>
 
             <div className="card-actions flex flex-row justify-evenly">
-                <Button className="grow btn-primary" disabled={noAction} label="Interested" />
-                <Button className="grow btn-secondary" disabled={noAction} label="Ignore" />
+                <Button
+                    className="grow btn-primary"
+                    disabled={noAction}
+                    label="Interested"
+                    onClick={handleSendConnectionRequest({ status: 'interested' })}
+                />
+                <Button
+                    className="grow btn-secondary"
+                    disabled={noAction}
+                    label="Ignore"
+                    onClick={handleSendConnectionRequest({ status: 'rejected' })}
+                />
             </div>
         </Card>
     )

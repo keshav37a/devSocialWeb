@@ -19,4 +19,10 @@ export const coreUISlice = createSlice({
 
 export const { showToast, resetToast } = coreUISlice.actions
 
+export const TOAST_TYPES = {
+    ERROR: 'ERROR',
+    INFO: 'INFO',
+    SUCCESS: 'SUCCESS',
+}
+
 export default coreUISlice.reducer

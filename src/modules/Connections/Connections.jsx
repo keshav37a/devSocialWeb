@@ -1,36 +1,38 @@
 import { useEffect } from 'react'
 
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { UserConnectionCard } from '@Connections/UserConnectionCard'
 import { Loading } from '@CoreUI'
 
-import { addConnections } from '@Connections/connectionsSlice'
+import { showToast } from '@CoreUI/coreUISlice'
 
-import { useGetUserConnectionsQuery } from '@Connections/connectionsApi'
+import { useDeleteConnectionMutation, useGetUserConnectionsQuery } from '@Connections/connectionsApi'
 
 export const Connections = () => {
-    const { connections } = useSelector((state) => state.connections)
-    const { data, isLoading } = useGetUserConnectionsQuery()
+    const { data: userConnections, isLoading, error: userConnectionsError } = useGetUserConnectionsQuery()
+    const [handleDeleteConnection, { error: deleteConnectionError }] = useDeleteConnectionMutation()
     const dispatch = useDispatch()
 
+    const handleDeleteConnectionHelper = (userId) => () => handleDeleteConnection({ userId })
+
     useEffect(() => {
-        const connectionsArr = data?.data?.connections
-        if (connectionsArr) {
-            dispatch(addConnections(connectionsArr))
+        if (deleteConnectionError || userConnectionsError) {
+            dispatch(showToast({ error: deleteConnectionError || userConnectionsError }))
         }
-    }, [data?.data?.connections, dispatch])
+    }, [deleteConnectionError, dispatch, userConnectionsError])
 
     return (
         <Loading isLoading={isLoading}>
-            {connections
-                ? connections?.map(({ _id, about, age, fullName, gender, photoUrl }) => (
+            {userConnections && userConnections.length >= 0
+                ? userConnections?.map(({ _id, about, age, fullName, gender, photoUrl }) => (
                       <UserConnectionCard
                           about={about}
                           age={age}
                           fullName={fullName}
                           gender={gender}
                           key={_id}
+                          onDeleteConnection={handleDeleteConnectionHelper(_id)}
                           photoUrl={photoUrl}
                       />
                   ))
