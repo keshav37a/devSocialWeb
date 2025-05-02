@@ -1,10 +1,4 @@
-import { useEffect } from 'react'
-
-import { useDispatch } from 'react-redux'
-
 import { Button, Card, Image, Loading } from '@CoreUI'
-
-import { showToast } from '@CoreUI/coreUISlice'
 
 import { useGetUserConnectionRequestsQuery, useReviewConnectionRequestMutation } from '@Connections/connectionsApi'
 
@@ -12,31 +6,13 @@ import { getCookieValue, getGenderDisplayName } from 'src/utils'
 
 export const ConnectionRequests = () => {
     const token = getCookieValue('token')
-    const {
-        data: connectionRequests,
-        isLoading,
-        error: getUserConnectionRequestsError,
-    } = useGetUserConnectionRequestsQuery(null, { skip: !token })
-    const [handleReviewConnectionRequest, { error: reviewConnectionRequestError }] =
-        useReviewConnectionRequestMutation()
-    const dispatch = useDispatch()
+    const { data: connectionRequests, isLoading } = useGetUserConnectionRequestsQuery(null, { skip: !token })
+    const [handleReviewConnectionRequest] = useReviewConnectionRequestMutation()
 
     const handleReviewConnectionRequestHelper =
         ({ status, connectionRequestId }) =>
         () =>
             handleReviewConnectionRequest({ status, connectionRequestId })
-
-    useEffect(() => {
-        if (reviewConnectionRequestError) {
-            dispatch(showToast({ error: reviewConnectionRequestError }))
-        }
-    }, [dispatch, reviewConnectionRequestError])
-
-    useEffect(() => {
-        if (getUserConnectionRequestsError) {
-            dispatch(showToast({ error: getUserConnectionRequestsError }))
-        }
-    }, [dispatch, getUserConnectionRequestsError])
 
     return (
         <Loading isLoading={isLoading}>

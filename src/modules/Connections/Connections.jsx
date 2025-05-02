@@ -1,11 +1,5 @@
-import { useEffect } from 'react'
-
-import { useDispatch } from 'react-redux'
-
 import { UserConnectionCard } from '@Connections/UserConnectionCard'
 import { Loading } from '@CoreUI'
-
-import { showToast } from '@CoreUI/coreUISlice'
 
 import { useGetUserConnectionsQuery, useRemoveConnectionMutation } from '@Connections/connectionsApi'
 
@@ -13,34 +7,10 @@ import { getCookieValue } from 'src/utils'
 
 export const Connections = () => {
     const token = getCookieValue('token')
-    const {
-        data: userConnections,
-        isLoading,
-        error: userConnectionsError,
-    } = useGetUserConnectionsQuery(null, { skip: !token })
-    const [handleRemoveConnection, { error: removeConnectionError }] = useRemoveConnectionMutation()
-    const dispatch = useDispatch()
+    const { data: userConnections, isLoading } = useGetUserConnectionsQuery(null, { skip: !token })
+    const [handleRemoveConnection] = useRemoveConnectionMutation()
 
-    const handleRemoveConnectionHelper = (userId) => async () => {
-        try {
-            await handleRemoveConnection({ userId })
-            dispatch(showToast({ content: 'Connection removed successfully. ' }))
-        } catch {
-            console.log('error')
-        }
-    }
-
-    useEffect(() => {
-        if (removeConnectionError) {
-            dispatch(showToast({ error: removeConnectionError }))
-        }
-    }, [removeConnectionError, dispatch, userConnectionsError])
-
-    useEffect(() => {
-        if (userConnectionsError) {
-            dispatch(showToast({ error: userConnectionsError }))
-        }
-    }, [dispatch, userConnectionsError])
+    const handleRemoveConnectionHelper = (userId) => () => handleRemoveConnection({ userId })
 
     return (
         <Loading isLoading={isLoading}>

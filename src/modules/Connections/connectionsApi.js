@@ -1,3 +1,4 @@
+import { showToast, TOAST_TYPES } from '@CoreUI/coreUISlice'
 import { apiSlice } from 'services/apiSlice'
 
 import { GET_USER_FEED_TAG } from '@Feed/feedApi'
@@ -17,6 +18,13 @@ export const connectionsApi = apiSlice.injectEndpoints({
             query: () => ({
                 url: '/connection-request/connections',
             }),
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled
+                } catch (error) {
+                    dispatch(showToast({ error: error?.error }))
+                }
+            },
             providesTags: [GET_USER_CONNECTIONS_TAG],
             transformResponse: (response) => response?.data?.connections,
         }),
@@ -24,6 +32,13 @@ export const connectionsApi = apiSlice.injectEndpoints({
             query: () => ({
                 url: '/connection-request/review-requests',
             }),
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled
+                } catch (error) {
+                    dispatch(showToast({ error: error?.error }))
+                }
+            },
             providesTags: [GET_USER_CONNECTION_REQUESTS_TAG],
             transformResponse: (response) => response?.data?.connectionRequests,
         }),
@@ -42,7 +57,9 @@ export const connectionsApi = apiSlice.injectEndpoints({
                         )
                     )
                     await queryFulfilled
-                } catch {
+                    dispatch(showToast({ content: 'Connection removed successfully', type: TOAST_TYPES.SUCCESS }))
+                } catch (error) {
+                    dispatch(showToast({ error: error?.error }))
                     patchResult.undo()
                 }
             },
@@ -61,7 +78,12 @@ export const connectionsApi = apiSlice.injectEndpoints({
                 )
                 try {
                     await queryFulfilled
-                } catch {
+                    //TODO: diff messages for accept / ignore
+                    dispatch(
+                        showToast({ content: 'Connection request reviewed successfully', type: TOAST_TYPES.SUCCESS })
+                    )
+                } catch (error) {
+                    dispatch(showToast({ error: error?.error }))
                     patchResult.undo()
                 }
             },
@@ -79,7 +101,9 @@ export const connectionsApi = apiSlice.injectEndpoints({
                 )
                 try {
                     await queryFulfilled
-                } catch {
+                    dispatch(showToast({ content: 'Connection request sent successfully', type: TOAST_TYPES.SUCCESS }))
+                } catch (error) {
+                    dispatch(showToast({ error: error?.error }))
                     patchResult.undo()
                 }
             },

@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux'
 import { Button, Card, DatePicker, Dropdown, FileSelect, Input, Loading, TextArea } from '@CoreUI'
 
 import { signInUser } from '@Auth/authSlice'
-import { showToast } from '@CoreUI/coreUISlice'
 
 import { useEditUserProfileMutation } from '@Profile/userProfileApi'
 
@@ -104,7 +103,6 @@ export const UserProfileForm = ({ dpRef, isCenter, onChangeUser, user }) => {
     useEffect(() => {
         if (data?.user && status?.statusCode === 200) {
             dispatch(signInUser(data.user))
-            dispatch(showToast({ content: 'User profile updated successfully' }))
             setProfileImageFile(null)
             dpRef.current.src = data?.user?.photoUrl
         }

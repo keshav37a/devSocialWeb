@@ -1,3 +1,4 @@
+import { showToast, TOAST_TYPES } from '@CoreUI/coreUISlice'
 import { apiSlice } from 'services/apiSlice'
 
 import { GET_USER_CONNECTION_REQUESTS_TAG, GET_USER_CONNECTIONS_TAG } from '@Connections/connectionsApi'
@@ -15,6 +16,14 @@ export const authApi = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: credentials,
             }),
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled
+                    dispatch(showToast({ content: 'Signed in successfuly', type: TOAST_TYPES.SUCCESS }))
+                } catch (error) {
+                    dispatch(showToast({ error: error?.error }))
+                }
+            },
             providesTags: [SIGNIN_TAG],
         }),
         [SIGNOUT_ENDPOINT]: builder.mutation({
@@ -22,6 +31,14 @@ export const authApi = apiSlice.injectEndpoints({
                 url: '/auth/signout',
                 method: 'POST',
             }),
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled
+                    dispatch(showToast({ content: 'Signed out successfuly', type: TOAST_TYPES.SUCCESS }))
+                } catch (error) {
+                    dispatch(showToast({ error: error?.error }))
+                }
+            },
             invalidatesTags: [
                 GET_USER_FEED_TAG,
                 GET_USER_CONNECTIONS_TAG,

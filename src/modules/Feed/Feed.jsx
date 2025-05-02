@@ -1,11 +1,7 @@
-import { useEffect } from 'react'
-
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import { Loading } from '@CoreUI'
 import { UserCard } from '@Feed/UserCard'
-
-import { showToast, TOAST_TYPES } from '@CoreUI/coreUISlice'
 
 import { useSendConnectionRequestMutation } from '@Connections/connectionsApi'
 import { useGetUserFeedQuery } from '@Feed/feedApi'
@@ -13,31 +9,11 @@ import { useGetUserFeedQuery } from '@Feed/feedApi'
 import { getCookieValue } from 'src/utils'
 
 export const Feed = () => {
-    const dispatch = useDispatch()
     const token = getCookieValue('token')
 
     const { user } = useSelector((state) => state.auth)
     const { data: feed, isLoading } = useGetUserFeedQuery(null, { skip: !user || !token })
-    const [handleSendConnectionRequest, { data: sendConnectionRequestData, error: sendConnectionRequestError }] =
-        useSendConnectionRequestMutation()
-
-    useEffect(() => {
-        if (sendConnectionRequestError) {
-            dispatch(
-                showToast({
-                    error: sendConnectionRequestError,
-                })
-            )
-        }
-    }, [sendConnectionRequestError, dispatch])
-
-    useEffect(() => {
-        if (sendConnectionRequestData) {
-            dispatch(
-                dispatch(showToast({ content: 'Connection request sent successfully', type: TOAST_TYPES.SUCCESS }))
-            )
-        }
-    }, [sendConnectionRequestData, dispatch])
+    const [handleSendConnectionRequest] = useSendConnectionRequestMutation()
 
     return (
         <Loading isLoading={isLoading}>

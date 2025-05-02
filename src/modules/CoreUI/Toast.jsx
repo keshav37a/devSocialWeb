@@ -7,7 +7,7 @@ import { resetToast, TOAST_TYPES } from '@CoreUI/coreUISlice'
 export const Toast = ({ children }) => {
     const dispatch = useDispatch()
     const { toast } = useSelector((state) => state.coreUI) || {}
-    const { time = 4000, content, type = TOAST_TYPES.SUCCESS, error } = toast || {}
+    const { time = 3000, content, type = TOAST_TYPES.SUCCESS, error } = toast || {}
     const [animateClose, setAnimateClose] = useState(false)
 
     const errorMessage = error
