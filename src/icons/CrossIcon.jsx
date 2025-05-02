@@ -1,8 +1,8 @@
-export const CrossIcon = ({ className = '', onClick }) => (
+export const CrossIcon = ({ className = '', onClick: handleClick }) => (
     <svg
         className={className}
         fill="currentColor"
-        onClick={onClick}
+        onClick={handleClick}
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
