@@ -46,7 +46,7 @@ export const UserCard = ({
                     className="grow btn-secondary"
                     disabled={noAction}
                     label="Ignore"
-                    onClick={handleSendConnectionRequest({ status: 'rejected' })}
+                    onClick={handleSendConnectionRequest({ status: 'ignored' })}
                 />
             </div>
         </Card>

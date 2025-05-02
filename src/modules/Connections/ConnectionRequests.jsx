@@ -1,21 +1,46 @@
+import { useEffect } from 'react'
+
+import { useDispatch } from 'react-redux'
+
 import { Button, Card, Image, Loading } from '@CoreUI'
 
-import { useGetUserConnectionRequestsQuery, useRespondToConnectionRequestMutation } from '@Connections/connectionsApi'
+import { showToast } from '@CoreUI/coreUISlice'
 
-import { getGenderDisplayName } from 'src/utils'
+import { useGetUserConnectionRequestsQuery, useReviewConnectionRequestMutation } from '@Connections/connectionsApi'
+
+import { getCookieValue, getGenderDisplayName } from 'src/utils'
 
 export const ConnectionRequests = () => {
-    const { data: connectionRequests, isLoading } = useGetUserConnectionRequestsQuery()
-    const [handleRespondToConnectionRequest, { _ }] = useRespondToConnectionRequestMutation()
+    const token = getCookieValue('token')
+    const {
+        data: connectionRequests,
+        isLoading,
+        error: getUserConnectionRequestsError,
+    } = useGetUserConnectionRequestsQuery(null, { skip: !token })
+    const [handleReviewConnectionRequest, { error: reviewConnectionRequestError }] =
+        useReviewConnectionRequestMutation()
+    const dispatch = useDispatch()
 
-    const handleRespondToConnectionRequestHelper =
+    const handleReviewConnectionRequestHelper =
         ({ status, connectionRequestId }) =>
         () =>
-            handleRespondToConnectionRequest({ status, connectionRequestId })
+            handleReviewConnectionRequest({ status, connectionRequestId })
+
+    useEffect(() => {
+        if (reviewConnectionRequestError) {
+            dispatch(showToast({ error: reviewConnectionRequestError }))
+        }
+    }, [dispatch, reviewConnectionRequestError])
+
+    useEffect(() => {
+        if (getUserConnectionRequestsError) {
+            dispatch(showToast({ error: getUserConnectionRequestsError }))
+        }
+    }, [dispatch, getUserConnectionRequestsError])
 
     return (
         <Loading isLoading={isLoading}>
-            {connectionRequests
+            {connectionRequests && connectionRequests.length >= 0
                 ? connectionRequests?.map(({ fromUser, _id }) => {
                       const { _id: userId, about, age, fullName, gender, photoUrl } = fromUser
                       return (
@@ -41,7 +66,7 @@ export const ConnectionRequests = () => {
                                   <Button
                                       className="w-36"
                                       label="Accept"
-                                      onClick={handleRespondToConnectionRequestHelper({
+                                      onClick={handleReviewConnectionRequestHelper({
                                           status: 'accepted',
                                           connectionRequestId: _id,
                                       })}
@@ -49,7 +74,7 @@ export const ConnectionRequests = () => {
                                   <Button
                                       className="ml-4 w-36"
                                       label="Reject"
-                                      onClick={handleRespondToConnectionRequestHelper({
+                                      onClick={handleReviewConnectionRequestHelper({
                                           status: 'rejected',
                                           connectionRequestId: _id,
                                       })}

@@ -1,69 +1,97 @@
 import { apiSlice } from 'services/apiSlice'
 
+import { GET_USER_FEED_TAG } from '@Feed/feedApi'
+
+export const GET_USER_CONNECTIONS_ENDPOINT = 'getUserConnections'
+export const GET_USER_CONNECTION_REQUESTS_ENDPOINT = 'getUserConnectionRequests'
+export const REMOVE_CONNECTION_ENDPOINT = 'removeConnection'
+export const REVIEW_CONNECTION_REQUEST_ENDPOINT = 'reviewConnectionRequest'
+export const SEND_CONNECTION_REQUEST_ENDPOINT = 'sendConnectionRequest'
+
+export const GET_USER_CONNECTIONS_TAG = 'GET_USER_CONNECTIONS'
+export const GET_USER_CONNECTION_REQUESTS_TAG = 'GET_USER_CONNECTION_REQUESTS'
+
 export const connectionsApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        deleteConnection: builder.mutation({
+        [GET_USER_CONNECTIONS_ENDPOINT]: builder.query({
+            query: () => ({
+                url: '/connection-request/connections',
+            }),
+            providesTags: [GET_USER_CONNECTIONS_TAG],
+            transformResponse: (response) => response?.data?.connections,
+        }),
+        [GET_USER_CONNECTION_REQUESTS_ENDPOINT]: builder.query({
+            query: () => ({
+                url: '/connection-request/review-requests',
+            }),
+            providesTags: [GET_USER_CONNECTION_REQUESTS_TAG],
+            transformResponse: (response) => response?.data?.connectionRequests,
+        }),
+        [REMOVE_CONNECTION_ENDPOINT]: builder.mutation({
             query: ({ userId }) => ({
-                url: `connection-request/connection/delete/${userId}`,
+                url: `connection-request/connection/remove/${userId}`,
                 method: 'DELETE',
             }),
+            invalidatesTags: [GET_USER_FEED_TAG],
             async onQueryStarted({ userId }, { dispatch, queryFulfilled }) {
-                const patchResult = dispatch(
-                    apiSlice.util.updateQueryData('getUserConnections', undefined, (draft) =>
-                        draft.filter((user) => user._id !== userId)
-                    )
-                )
+                let patchResult
                 try {
+                    patchResult = dispatch(
+                        apiSlice.util.updateQueryData(GET_USER_CONNECTIONS_ENDPOINT, null, (draft) =>
+                            draft.filter((user) => user._id !== userId)
+                        )
+                    )
                     await queryFulfilled
-                } catch (_) {
+                } catch {
                     patchResult.undo()
                 }
             },
         }),
-        getUserConnectionRequests: builder.query({
-            query: () => ({
-                url: '/connection-request/review-requests',
-            }),
-            transformResponse: (response) => response?.data?.connectionRequests,
-        }),
-        getUserConnections: builder.query({
-            query: () => ({
-                url: '/connection-request/connections',
-            }),
-            transformResponse: (response) => response?.data?.connections,
-        }),
-        respondToConnectionRequest: builder.mutation({
+        [REVIEW_CONNECTION_REQUEST_ENDPOINT]: builder.mutation({
             query: ({ status, connectionRequestId }) => ({
                 url: `connection-request/review/${status}/${connectionRequestId}`,
                 method: 'POST',
             }),
+            invalidatesTags: [GET_USER_CONNECTIONS_TAG],
             async onQueryStarted({ connectionRequestId }, { dispatch, queryFulfilled }) {
                 const patchResult = dispatch(
-                    apiSlice.util.updateQueryData('getUserConnectionRequests', undefined, (draft) =>
+                    apiSlice.util.updateQueryData('getUserConnectionRequests', null, (draft) =>
                         draft.filter((connectionRequest) => connectionRequest?._id !== connectionRequestId)
                     )
                 )
                 try {
                     await queryFulfilled
-                } catch (_) {
+                } catch {
                     patchResult.undo()
                 }
             },
         }),
-        sendConnectionRequest: builder.mutation({
+        [SEND_CONNECTION_REQUEST_ENDPOINT]: builder.mutation({
             query: ({ status, userId }) => ({
                 url: `connection-request/send/${status}/${userId}`,
                 method: 'POST',
             }),
+            async onQueryStarted({ userId }, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    apiSlice.util.updateQueryData('getUserFeed', null, (draft) =>
+                        draft.filter((user) => user?._id !== userId)
+                    )
+                )
+                try {
+                    await queryFulfilled
+                } catch {
+                    patchResult.undo()
+                }
+            },
             transformResponse: (response) => response?.data,
         }),
     }),
 })
 
 export const {
-    useDeleteConnectionMutation,
     useGetUserConnectionsQuery,
     useGetUserConnectionRequestsQuery,
-    useRespondToConnectionRequestMutation,
+    useRemoveConnectionMutation,
+    useReviewConnectionRequestMutation,
     useSendConnectionRequestMutation,
 } = connectionsApi

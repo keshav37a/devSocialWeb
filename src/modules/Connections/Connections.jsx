@@ -7,20 +7,40 @@ import { Loading } from '@CoreUI'
 
 import { showToast } from '@CoreUI/coreUISlice'
 
-import { useDeleteConnectionMutation, useGetUserConnectionsQuery } from '@Connections/connectionsApi'
+import { useGetUserConnectionsQuery, useRemoveConnectionMutation } from '@Connections/connectionsApi'
+
+import { getCookieValue } from 'src/utils'
 
 export const Connections = () => {
-    const { data: userConnections, isLoading, error: userConnectionsError } = useGetUserConnectionsQuery()
-    const [handleDeleteConnection, { error: deleteConnectionError }] = useDeleteConnectionMutation()
+    const token = getCookieValue('token')
+    const {
+        data: userConnections,
+        isLoading,
+        error: userConnectionsError,
+    } = useGetUserConnectionsQuery(null, { skip: !token })
+    const [handleRemoveConnection, { error: removeConnectionError }] = useRemoveConnectionMutation()
     const dispatch = useDispatch()
 
-    const handleDeleteConnectionHelper = (userId) => () => handleDeleteConnection({ userId })
+    const handleRemoveConnectionHelper = (userId) => async () => {
+        try {
+            await handleRemoveConnection({ userId })
+            dispatch(showToast({ content: 'Connection removed successfully. ' }))
+        } catch {
+            console.log('error')
+        }
+    }
 
     useEffect(() => {
-        if (deleteConnectionError || userConnectionsError) {
-            dispatch(showToast({ error: deleteConnectionError || userConnectionsError }))
+        if (removeConnectionError) {
+            dispatch(showToast({ error: removeConnectionError }))
         }
-    }, [deleteConnectionError, dispatch, userConnectionsError])
+    }, [removeConnectionError, dispatch, userConnectionsError])
+
+    useEffect(() => {
+        if (userConnectionsError) {
+            dispatch(showToast({ error: userConnectionsError }))
+        }
+    }, [dispatch, userConnectionsError])
 
     return (
         <Loading isLoading={isLoading}>
@@ -32,7 +52,7 @@ export const Connections = () => {
                           fullName={fullName}
                           gender={gender}
                           key={_id}
-                          onDeleteConnection={handleDeleteConnectionHelper(_id)}
+                          onRemoveConnection={handleRemoveConnectionHelper(_id)}
                           photoUrl={photoUrl}
                       />
                   ))

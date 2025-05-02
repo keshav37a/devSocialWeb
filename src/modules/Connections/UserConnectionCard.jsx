@@ -2,8 +2,8 @@ import { Button, Card, Image } from '@CoreUI'
 
 import { getGenderDisplayName } from 'src/utils'
 
-export const UserConnectionCard = ({ _id, about, age, fullName, gender, onDeleteConnection, photoUrl }) => {
-    const handleDeleteConnection = () => onDeleteConnection?.()
+export const UserConnectionCard = ({ _id, about, age, fullName, gender, onRemoveConnection, photoUrl }) => {
+    const handleRemoveConnection = () => onRemoveConnection?.()
 
     return (
         <Card
@@ -24,7 +24,7 @@ export const UserConnectionCard = ({ _id, about, age, fullName, gender, onDelete
                 <p>{`${age}, ${getGenderDisplayName(gender)}`}</p>
                 <p className="mt-2">{about}</p>
             </div>
-            <Button className="ml-auto" label="Remove connection" onClick={handleDeleteConnection} />
+            <Button className="ml-auto" label="Remove connection" onClick={handleRemoveConnection} />
         </Card>
     )
 }

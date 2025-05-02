@@ -28,7 +28,7 @@ export const Body = () => {
     const { data, status } = userProfileRequestData || {}
 
     useEffect(() => {
-        const disAllowedRoutes = ['/profile', '/feed']
+        const disAllowedRoutes = ['/profile', '/feed', '/connections', '/connection-requests']
         const token = getCookieValue('token')
         if (disAllowedRoutes.includes(pathname) && (!token || (token && error && !user))) {
             navigate('/signin')

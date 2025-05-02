@@ -10,7 +10,10 @@ export const Toast = ({ children }) => {
     const { time = 4000, content, type = TOAST_TYPES.SUCCESS, error } = toast || {}
     const [animateClose, setAnimateClose] = useState(false)
 
-    const errorMessage = error ? ((error?.error || error?.data?.message) ?? 'Something went wrong') : null
+    const errorMessage = error
+        ? ((error?.error || error?.data?.message || error?.data?.error?.message || error?.message) ??
+          'Something went wrong')
+        : null
 
     useEffect(() => {
         let timeoutId1 = Date.now()

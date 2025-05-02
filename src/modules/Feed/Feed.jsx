@@ -10,10 +10,14 @@ import { showToast, TOAST_TYPES } from '@CoreUI/coreUISlice'
 import { useSendConnectionRequestMutation } from '@Connections/connectionsApi'
 import { useGetUserFeedQuery } from '@Feed/feedApi'
 
+import { getCookieValue } from 'src/utils'
+
 export const Feed = () => {
     const dispatch = useDispatch()
+    const token = getCookieValue('token')
+
     const { user } = useSelector((state) => state.auth)
-    const { data: feed, isLoading } = useGetUserFeedQuery(null, { skip: !user })
+    const { data: feed, isLoading } = useGetUserFeedQuery(null, { skip: !user || !token })
     const [handleSendConnectionRequest, { data: sendConnectionRequestData, error: sendConnectionRequestError }] =
         useSendConnectionRequestMutation()
 
@@ -21,10 +25,7 @@ export const Feed = () => {
         if (sendConnectionRequestError) {
             dispatch(
                 showToast({
-                    content:
-                        (sendConnectionRequestError?.message || sendConnectionRequestError?.error) ??
-                        'Something went wrong',
-                    type: TOAST_TYPES.ERROR,
+                    error: sendConnectionRequestError,
                 })
             )
         }
