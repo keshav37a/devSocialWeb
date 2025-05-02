@@ -1,5 +1,3 @@
-import { useSelector } from 'react-redux'
-
 import { Loading } from '@CoreUI'
 import { UserCard } from '@Feed/UserCard'
 
@@ -11,8 +9,7 @@ import { getCookieValue } from 'src/utils'
 export const Feed = () => {
     const token = getCookieValue('token')
 
-    const { user } = useSelector((state) => state.auth)
-    const { data: feed, isLoading } = useGetUserFeedQuery(null, { skip: !user || !token })
+    const { data: feed, isLoading } = useGetUserFeedQuery(null, { skip: !token })
     const [handleSendConnectionRequest] = useSendConnectionRequestMutation()
 
     return (

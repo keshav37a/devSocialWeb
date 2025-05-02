@@ -1,19 +1,15 @@
 import { useEffect, useState } from 'react'
 
-import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
 
 import { Card, Input, Loading } from '@CoreUI'
 import { Button } from '@CoreUI/Button'
-
-import { signInUser } from '@Auth/authSlice'
 
 import { useSignInMutation } from '@Auth/authApi'
 
 export const SignIn = () => {
     const [email, setEmail] = useState('admin@gmail.com')
     const [password, setPassword] = useState('password')
-    const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const handleChangeEmail = (e) => setEmail(e.target.value)
@@ -25,12 +21,10 @@ export const SignIn = () => {
     const statusCode = error?.data?.status?.statusCode
 
     useEffect(() => {
-        /* TODO: Error handling pending */
         if (data?.user && status?.success) {
-            dispatch(signInUser(data.user))
             navigate('/feed')
         }
-    }, [data, dispatch, navigate, status])
+    }, [data, navigate, status])
 
     return (
         <Loading isLoading={isSignInLoading}>

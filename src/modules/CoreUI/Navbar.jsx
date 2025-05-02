@@ -1,33 +1,17 @@
-import { useEffect } from 'react'
-
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router'
 
 import { Image } from '@CoreUI'
 
-import { signOutUser } from '@Auth/authSlice'
-
 import { useSignOutMutation } from '@Auth/authApi'
-
-import { deleteCookie } from 'src/utils'
 
 const defaultPhotoUrl = 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
 
 export const Navbar = () => {
     const { user } = useSelector((state) => state.auth)
     const navigate = useNavigate()
-    const dispatch = useDispatch()
 
-    const [handleSignOut, { data: userSignOutRequestData }] = useSignOutMutation()
-    const { data, status } = userSignOutRequestData || {}
-
-    useEffect(() => {
-        /* TODO: Error handling pending */
-        if (!data?.user && status?.success) {
-            dispatch(signOutUser())
-            deleteCookie('token')
-        }
-    }, [data, dispatch, navigate, status])
+    const [handleSignOut] = useSignOutMutation()
 
     const handleNavigateToSignIn = () => navigate('/signin')
 
