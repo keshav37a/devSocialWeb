@@ -7,7 +7,7 @@ import { Button } from '@CoreUI/Button'
 
 import { useSignInMutation } from '@Auth/authApi'
 
-export const SignIn = () => {
+export const SignIn = ({ onSignUpToggle: handleSignUpToggle }) => {
     const [email, setEmail] = useState('admin@gmail.com')
     const [password, setPassword] = useState('password')
     const navigate = useNavigate()
@@ -28,9 +28,9 @@ export const SignIn = () => {
 
     return (
         <Loading isLoading={isSignInLoading}>
-            <Card isCenter className="mt-16">
-                <fieldset className="fieldset w-xs">
-                    <legend className="fieldset-legend">Login</legend>
+            <Card isCenter cardProps={{ className: 'w-[60%] max-w-120', isAnimate: false }} className="mt-16">
+                <fieldset className="fieldset">
+                    <legend className="fieldset-legend font-medium">Login</legend>
                     <Input
                         labelProps={{ content: 'Email' }}
                         onChange={handleChangeEmail}
@@ -57,6 +57,9 @@ export const SignIn = () => {
                     >
                         Login
                     </Button>
+                    <p className="mt-4 cursor-pointer text-center" onClick={handleSignUpToggle}>
+                        {"Don't have an account? Sign up"}
+                    </p>
                 </fieldset>
             </Card>
         </Loading>

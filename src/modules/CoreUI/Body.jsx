@@ -28,10 +28,14 @@ export const Body = () => {
     const { data, status } = userProfileRequestData || {}
 
     useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, [pathname])
+
+    useEffect(() => {
         const disAllowedRoutes = ['/profile', '/feed', '/connections', '/connection-requests']
         const token = getCookieValue('token')
         if (disAllowedRoutes.includes(pathname) && (!token || (token && error && !user))) {
-            navigate('/signin')
+            navigate('/auth')
         }
         if (data?.user && status?.success && !user && token) {
             dispatch(signInUser(data.user))

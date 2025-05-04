@@ -1,6 +1,9 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+
+import { twMerge } from 'tailwind-merge'
 
 import { Button } from '@CoreUI/Button'
+import { useOutsideClick } from 'hooks/useOutsideClick'
 import { ChevronDownIcon } from 'icons'
 
 export const Dropdown = ({
@@ -27,8 +30,15 @@ export const Dropdown = ({
     const [isOpen, setIsOpen] = useState(false)
     const [selectedItem, setSelectedItem] = useState(getInitialSelectedItem())
 
+    const dropdownRef = useRef()
+    const dropdownContentRef = useRef()
+
     const handleOpenDropdown = () => {
-        setIsOpen((prev) => !prev)
+        setIsOpen(true)
+    }
+
+    const handleCloseDropdown = () => {
+        setIsOpen(false)
     }
 
     const handleChangeDropdownValue = (item) => {
@@ -37,15 +47,18 @@ export const Dropdown = ({
         setIsOpen(false)
     }
 
+    useOutsideClick([dropdownRef, dropdownContentRef], handleCloseDropdown)
+
     return (
         <div className="relative inline-block text-left">
             <fieldset className="fieldset">
-                {label ? <label className={`fieldset-label ${labelClassName}`}>{labelContent}</label> : null}
+                {label ? <label className={twMerge(`fieldset-label ${labelClassName}`)}>{labelContent}</label> : null}
                 <button
-                    className="input inline-flex w-48 cursor-pointer items-center justify-between rounded-2xl border border-gray-300 px-4 py-2 text-sm font-medium text-[#EDF1FE] shadow-sm hover:bg-[#2b2f37] focus:outline-none"
+                    className="input inline-flex w-full cursor-pointer items-center justify-between rounded-2xl border border-gray-300 px-4 py-2 text-sm font-medium text-[#EDF1FE] shadow-sm hover:bg-[#2b2f37] focus:outline-none"
                     onClick={handleOpenDropdown}
+                    ref={dropdownRef}
                 >
-                    {displayItemLabelKey ? selectedItem[displayItemLabelKey] : String(selectedItem)}
+                    {displayItemLabelKey ? selectedItem?.[displayItemLabelKey] : String(selectedItem)}
                     <ChevronDownIcon
                         className={`ml-2 h-5 w-5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
                     />
@@ -53,7 +66,10 @@ export const Dropdown = ({
             </fieldset>
 
             {isOpen ? (
-                <div className="dropdown-content ring-opacity-5 absolute left-0 z-10 mt-2 w-48 origin-top-right rounded-2xl bg-base-300 shadow-lg ring-1 ring-black focus:outline-none">
+                <div
+                    className="dropdown-content ring-opacity-5 absolute left-0 z-10 mt-2 w-48 origin-top-right rounded-2xl bg-base-300 shadow-lg ring-1 ring-black focus:outline-none"
+                    ref={dropdownContentRef}
+                >
                     <div className="py-1">
                         {items?.map((item, index) => {
                             const { id, _id, value, ...restProps } = item
@@ -63,7 +79,7 @@ export const Dropdown = ({
                                     key={id || _id || value}
                                     onClick={() => handleChangeDropdownValue(item)}
                                 >
-                                    {displayItemLabelKey ? restProps[displayItemLabelKey] : String(item)}
+                                    {displayItemLabelKey ? restProps?.[displayItemLabelKey] : String(item)}
                                 </Button>
                             )
                         })}

@@ -1,10 +1,14 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { useEditUserProfileMutation } from './userProfileApi'
 
 import { Loading } from '@CoreUI'
 import { UserCard } from '@Feed/UserCard'
 import { UserProfileForm } from '@Profile/UserProfileForm'
+
+import { signInUser } from '@Auth/authSlice'
 
 import { calculateAge } from 'src/utils'
 
@@ -15,21 +19,39 @@ export const Profile = () => {
     const age = useMemo(() => calculateAge(dob), [dob])
 
     const dpRef = useRef()
+    const dispatch = useDispatch()
+
+    const [handleEditUserProfile, { data: editedUserProfileData, isLoading }] = useEditUserProfileMutation()
+    const { data, status } = editedUserProfileData || {}
 
     const handleChangeUser = (fieldData) => {
         setUpdatedUser((prev) => ({ ...user, ...prev, ...fieldData }))
     }
 
+    useEffect(() => {
+        if (data?.user && status?.statusCode === 200) {
+            dispatch(signInUser(data.user))
+            dpRef.current.src = data?.user?.photoUrl
+        }
+    }, [dpRef, data?.user, status, dispatch])
+
     return (
-        <Loading isLoading={!user}>
-            <div className="flex justify-center gap-16">
-                <UserProfileForm isCenter dpRef={dpRef} onChangeUser={handleChangeUser} user={user} />
+        <Loading isLoading={!user || isLoading}>
+            <div className="flex w-full justify-center gap-16">
+                <UserProfileForm
+                    isCenter
+                    cardProps={{ cardProps: { className: 'w-96', isAnimate: false } }}
+                    dpRef={dpRef}
+                    onChangeUser={handleChangeUser}
+                    onSubmit={handleEditUserProfile}
+                    user={user}
+                />
                 <UserCard
                     {...user}
                     noAction
                     about={about ?? user?.about}
                     age={age ?? user?.age}
-                    cardProps={{ cardProps: { className: 'w-96' } }}
+                    cardProps={{ cardProps: { className: 'w-96', isAnimate: false } }}
                     dpRef={dpRef}
                     firstName={firstName ?? user?.firstName}
                     gender={gender ?? user?.gender}

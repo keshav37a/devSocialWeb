@@ -1,17 +1,21 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
-import { useDispatch } from 'react-redux'
-
-import { Button, Card, DatePicker, Dropdown, FileSelect, Input, Loading, TextArea } from '@CoreUI'
-
-import { signInUser } from '@Auth/authSlice'
-
-import { useEditUserProfileMutation } from '@Profile/userProfileApi'
+import { Button, Card, DatePicker, Dropdown, FileSelect, Input, TextArea } from '@CoreUI'
 
 import { formatDate } from 'src/utils'
 
-export const UserProfileForm = ({ dpRef, isCenter, onChangeUser, user }) => {
-    const dispatch = useDispatch()
+import { GENDER_OPTIONS } from 'src/constants'
+
+export const UserProfileForm = ({
+    cardProps,
+    dpRef,
+    isCenter,
+    isSignUp,
+    onChangeUser = () => {},
+    onSubmit,
+    onToggleSignIn: handleToggleSignIn = () => {},
+    user,
+}) => {
     const {
         firstName: existingFirstName,
         lastName: existingLastName,
@@ -25,10 +29,13 @@ export const UserProfileForm = ({ dpRef, isCenter, onChangeUser, user }) => {
 
     const [firstName, setFirstName] = useState(existingFirstName ?? '')
     const [lastName, setLastName] = useState(existingLastName ?? '')
+    const [email, setEmail] = useState('')
     const [about, setAbout] = useState(existingAbout ?? '')
     const [gender, setGender] = useState(existingGender ?? '')
     const [dob, setDob] = useState(existingDOB ?? '')
     const [profileImageFile, setProfileImageFile] = useState(null)
+    const [password, setPassword] = useState(null)
+    const [repeatPassword, setRepeatPassword] = useState(null)
 
     const handleFirstNameChange = (e) => {
         setFirstName(e.target.value)
@@ -37,6 +44,17 @@ export const UserProfileForm = ({ dpRef, isCenter, onChangeUser, user }) => {
     const handleLastNameChange = (e) => {
         setLastName(e.target.value)
         onChangeUser({ lastName: e.target.value })
+    }
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value)
+        onChangeUser({ email: e.target.value })
+    }
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value)
+        onChangeUser({ password: e.target.value })
+    }
+    const handleRepeatPasswordChange = (e) => {
+        setRepeatPassword(e.target.value)
     }
     const handleAboutChange = (e) => {
         setAbout(e.target.value)
@@ -74,9 +92,6 @@ export const UserProfileForm = ({ dpRef, isCenter, onChangeUser, user }) => {
         dob !== existingDOB ||
         profileImageFile
 
-    const [handleEditUserProfile, { data: editedUserProfileData, isLoading }] = useEditUserProfileMutation()
-    const { data, status } = editedUserProfileData || {}
-
     const handleEditUserProfileForm = () => {
         const formData = new FormData()
         if (profileImageFile) {
@@ -97,64 +112,77 @@ export const UserProfileForm = ({ dpRef, isCenter, onChangeUser, user }) => {
         if (dob !== existingDOB) {
             formData.append('dob', dob)
         }
-        handleEditUserProfile(formData)
+        onSubmit?.(formData)
     }
 
-    useEffect(() => {
-        if (data?.user && status?.statusCode === 200) {
-            dispatch(signInUser(data.user))
-            setProfileImageFile(null)
-            dpRef.current.src = data?.user?.photoUrl
-        }
-    }, [dpRef, data?.user, status, dispatch])
-
     return (
-        <>
-            <Loading isLoading={isLoading} />
-            <Card isCenter={isCenter}>
-                <p className="text-center">Update user profile</p>
-                <fieldset className="fieldset w-xs">
-                    <Input
-                        labelProps={{ content: 'First name' }}
-                        name="firstName"
-                        onChange={handleFirstNameChange}
-                        value={firstName}
-                    />
-                    <Input
-                        labelProps={{ content: 'Last name' }}
-                        name="lastName"
-                        onChange={handleLastNameChange}
-                        value={lastName}
-                    />
-                    <TextArea label={{ content: 'About' }} name="About" onChange={handleAboutChange} value={about} />
-                    <DatePicker
-                        currentDate={existingDOB ? new Date(existingDOB) : new Date()}
-                        onDateChange={handleDateChange}
-                    />
-                    <Dropdown
-                        displayItemLabelKey="displayName"
-                        initialSelectedValue={gender}
-                        items={genderOptionsDisplay}
-                        label={{ content: 'Gender' }}
-                        onChange={handleGenderChange}
-                        valueKey="value"
-                    />
-                    <FileSelect
-                        accept="image/*"
-                        btnProps={{ label: 'Select an image' }}
-                        key={updatedAt}
-                        name="profilePic"
-                        onFileRemove={handleRemoveImage}
-                        onFileSelect={handleSelectImage}
-                    />
-                    <Button
-                        className={'mt-4'}
-                        disabled={!isFormValid}
-                        label="Save"
-                        onClick={handleEditUserProfileForm}
-                    />
-                </fieldset>
-            </Card>
-        </>
+        <Card cardProps={{ className: 'max-w-120', isAnimate: false }} isCenter={isCenter} {...cardProps}>
+            <legend className="fieldset-legend font-medium">{isSignUp ? 'Sign up' : 'Update user profile'}</legend>
+            <fieldset className="fieldset">
+                <Input
+                    labelProps={{ content: 'First name' }}
+                    name="firstName"
+                    onChange={handleFirstNameChange}
+                    value={firstName}
+                />
+                <Input
+                    labelProps={{ content: 'Last name' }}
+                    name="lastName"
+                    onChange={handleLastNameChange}
+                    value={lastName}
+                />
+                {isSignUp ? (
+                    <>
+                        <Input
+                            labelProps={{ content: 'Email' }}
+                            name="email"
+                            onChange={handleEmailChange}
+                            value={email}
+                        />
+                        <Input
+                            labelProps={{ content: 'Password' }}
+                            name="password"
+                            onChange={handlePasswordChange}
+                            type="password"
+                            value={password}
+                        />
+                        <Input
+                            labelProps={{ content: 'Confirm password' }}
+                            name="confirm-password"
+                            onChange={handleRepeatPasswordChange}
+                            type="password"
+                            value={repeatPassword}
+                        />
+                    </>
+                ) : null}
+                <TextArea label={{ content: 'About' }} name="About" onChange={handleAboutChange} value={about} />
+                <DatePicker
+                    currentDate={existingDOB ? new Date(existingDOB) : new Date()}
+                    onDateChange={handleDateChange}
+                />
+                <Dropdown
+                    displayItemLabelKey="displayName"
+                    initialSelectedValue={gender}
+                    items={genderOptionsDisplay || GENDER_OPTIONS}
+                    label={{ content: 'Gender' }}
+                    onChange={handleGenderChange}
+                    valueKey="value"
+                />
+                <FileSelect
+                    accept="image/*"
+                    btnProps={{ label: 'Select an image' }}
+                    key={updatedAt}
+                    name="profilePic"
+                    onFileRemove={handleRemoveImage}
+                    onFileSelect={handleSelectImage}
+                />
+                <Button className={'mt-4'} disabled={!isFormValid} label="Save" onClick={handleEditUserProfileForm} />
+                {isSignUp ? (
+                    <p className="mt-4 cursor-pointer text-center" onClick={handleToggleSignIn}>
+                        Already have an account? Sign in
+                    </p>
+                ) : null}
+            </fieldset>
+        </Card>
     )
 }

@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router'
 
 import { store } from './store'
 
-import { SignIn } from '@Auth'
+import { Auth } from '@Auth'
 import { ConnectionRequests, Connections } from '@Connections'
 import { Body, Toast } from '@CoreUI'
 import { Feed } from '@Feed'
@@ -36,8 +36,8 @@ const router = createBrowserRouter([
                 element: <Profile />,
             },
             {
-                path: '/signin',
-                element: <SignIn />,
+                path: '/auth',
+                element: <Auth />,
             },
         ],
     },

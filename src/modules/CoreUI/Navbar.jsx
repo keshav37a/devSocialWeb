@@ -13,7 +13,7 @@ export const Navbar = () => {
 
     const [handleSignOut] = useSignOutMutation()
 
-    const handleNavigateToSignIn = () => navigate('/signin')
+    const handleNavigateToSignIn = () => navigate('/auth')
 
     return (
         <div className="navbar bg-base-300 shadow-sm">

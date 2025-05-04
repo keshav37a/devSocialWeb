@@ -9,8 +9,10 @@ import { GET_USER_FEED_TAG } from '@Feed/feedApi'
 import { deleteCookie } from 'src/utils'
 
 export const SIGNIN_TAG = 'SIGN_IN'
+
 export const SIGNIN_ENDPOINT = 'signIn'
 export const SIGNOUT_ENDPOINT = 'signOut'
+export const SIGNUP_ENDPOINT = 'signUp'
 
 export const authApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -53,7 +55,28 @@ export const authApi = apiSlice.injectEndpoints({
                 }
             },
         }),
+        [SIGNUP_ENDPOINT]: builder.mutation({
+            query: (userData) => ({
+                url: '/auth/signup',
+                method: 'POST',
+                body: userData,
+            }),
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled
+                    dispatch(showToast({ content: 'User signed up successfuly', type: TOAST_TYPES.SUCCESS }))
+                } catch (error) {
+                    dispatch(showToast({ error: error?.error }))
+                }
+            },
+            invalidatesTags: [
+                GET_USER_FEED_TAG,
+                GET_USER_CONNECTIONS_TAG,
+                GET_USER_CONNECTION_REQUESTS_TAG,
+                SIGNIN_TAG,
+            ],
+        }),
     }),
 })
 
-export const { useSignInMutation, useSignOutMutation } = authApi
+export const { useSignInMutation, useSignOutMutation, useSignUpMutation } = authApi

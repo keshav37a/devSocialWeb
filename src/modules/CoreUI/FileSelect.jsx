@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react'
 
+import { twMerge } from 'tailwind-merge'
+
 import { Button, Input } from '@CoreUI'
 import { CrossIcon } from 'icons'
 
@@ -39,7 +41,7 @@ export const FileSelect = ({
 
     return (
         <fieldset className="fieldset min-h-[5.5rem]">
-            {labelProps ? <label className={`fieldset-label ${labelClassName}`}>{labelContent}</label> : null}
+            {labelProps ? <label className={twMerge(`fieldset-label ${labelClassName}`)}>{labelContent}</label> : null}
             <Input
                 inputProps={{ className: 'hidden', accept, name }}
                 onChange={handleChange}
@@ -54,7 +56,7 @@ export const FileSelect = ({
                     <CrossIcon className="h-3 w-3 cursor-pointer" onClick={handleDeleteFile} />
                 </div>
             ) : null}
-            {errorProps ? <span className={`text-red-400 ${errorClassName}`}>{errorContent}</span> : null}
+            {errorProps ? <span className={twMerge(`text-red-400 ${errorClassName}`)}>{errorContent}</span> : null}
         </fieldset>
     )
 }

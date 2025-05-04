@@ -1,3 +1,5 @@
+import { twMerge } from 'tailwind-merge'
+
 export const Input = ({
     errorProps,
     inputProps,
@@ -21,9 +23,9 @@ export const Input = ({
 
     return (
         <fieldset className="fieldset">
-            {labelProps ? <label className={`fieldset-label ${labelClassName}`}>{labelContent}</label> : null}
+            {labelProps ? <label className={twMerge(`fieldset-label ${labelClassName}`)}>{labelContent}</label> : null}
             <input
-                className={`input ${type === 'fileInput' ? 'file-input' : ''} ${inputClassName}`}
+                className={twMerge(`input w-full ${type === 'fileInput' ? 'file-input' : ''} ${inputClassName}`)}
                 name={name}
                 onChange={handleChange}
                 onClick={handleClick}
@@ -33,8 +35,8 @@ export const Input = ({
                 value={value}
                 {...inputProps}
             />
-            {optionalProps ? <p className={`label ${optionalClassName}`}>{optionalContent}</p> : null}
-            {errorProps ? <span className={`text-red-400 ${errorClassName}`}>{errorContent}</span> : null}
+            {optionalProps ? <p className={twMerge(`label ${optionalClassName}`)}>{optionalContent}</p> : null}
+            {errorProps ? <span className={twMerge(`text-red-400 ${errorClassName}`)}>{errorContent}</span> : null}
         </fieldset>
     )
 }
