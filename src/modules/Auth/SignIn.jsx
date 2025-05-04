@@ -1,24 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { useNavigate } from 'react-router'
 
-import { Card, Input, Loading } from '@CoreUI'
-import { Button } from '@CoreUI/Button'
+import { Card, Loading } from '@CoreUI'
+import { Form } from '@CoreUI/Form'
 
 import { useSignInMutation } from '@Auth/authApi'
 
 export const SignIn = ({ onSignUpToggle: handleSignUpToggle }) => {
-    const [email, setEmail] = useState('admin@gmail.com')
-    const [password, setPassword] = useState('password')
     const navigate = useNavigate()
-
-    const handleChangeEmail = (e) => setEmail(e.target.value)
-    const handleChangePassword = (e) => setPassword(e.target.value)
 
     const [handleSignIn, { isLoading: isSignInLoading, data: userSignInRequestData, error }] = useSignInMutation()
     const { data, status } = userSignInRequestData || {}
     const errorMessage = error?.data?.error?.message
-    const statusCode = error?.data?.status?.statusCode
 
     useEffect(() => {
         if (data?.user && status?.success) {
@@ -27,41 +21,38 @@ export const SignIn = ({ onSignUpToggle: handleSignUpToggle }) => {
     }, [data, navigate, status])
 
     return (
-        <Loading isLoading={isSignInLoading}>
+        <>
+            <Loading isLoading={isSignInLoading} />
             <Card isCenter cardProps={{ className: 'w-[60%] max-w-120', isAnimate: false }} className="mt-16">
-                <fieldset className="fieldset">
-                    <legend className="fieldset-legend font-medium">Login</legend>
-                    <Input
-                        labelProps={{ content: 'Email' }}
-                        onChange={handleChangeEmail}
-                        placeholder="Email"
-                        type="email"
-                        value={email}
-                    />
-                    <Input
-                        errorProps={
-                            (errorMessage && statusCode === 400) || statusCode === 404
-                                ? { content: errorMessage }
-                                : null
-                        }
-                        labelProps={{ content: 'Password' }}
-                        onChange={handleChangePassword}
-                        placeholder="Password"
-                        type="password"
-                        value={password}
-                    />
-                    <Button
-                        className="mt-4"
-                        disabled={!email || !password}
-                        onClick={() => handleSignIn({ email, password })}
-                    >
-                        Login
-                    </Button>
-                    <p className="mt-4 cursor-pointer text-center" onClick={handleSignUpToggle}>
-                        {"Don't have an account? Sign up"}
-                    </p>
-                </fieldset>
+                <h3>Sign in</h3>
+                <Form
+                    fields={[
+                        {
+                            id: 'email',
+                            name: 'email',
+                            type: 'email',
+                            labelProps: { content: 'Email' },
+                            placeholder: 'Enter your email',
+                            required: true,
+                            errorProps: { content: errorMessage?.includes('User') ? errorMessage : null },
+                        },
+                        {
+                            id: 'password',
+                            name: 'password',
+                            type: 'password',
+                            labelProps: { content: 'Password' },
+                            placeholder: 'Enter your password',
+                            required: true,
+                            errorProps: { content: errorMessage?.includes('password') ? errorMessage : null },
+                        },
+                    ]}
+                    onSubmit={handleSignIn}
+                    submitBtnProps={{ className: 'w-48', label: 'Sign in' }}
+                />
+                <p className="mt-2 cursor-pointer text-center" onClick={handleSignUpToggle}>
+                    {"Don't have an account? Sign up"}
+                </p>
             </Card>
-        </Loading>
+        </>
     )
 }
