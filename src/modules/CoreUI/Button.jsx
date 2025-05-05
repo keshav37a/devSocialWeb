@@ -1,6 +1,16 @@
 import { twMerge } from 'tailwind-merge'
 
-export const Button = ({ className, children, disabled, label, onClick, isFullWidth, isCenter = true }) => {
+export const Button = ({
+    className,
+    children,
+    disabled,
+    isCenter,
+    isFullWidth,
+    label,
+    onClick,
+    ref,
+    type = 'button',
+}) => {
     const handleClick = (e) => onClick?.(e)
 
     return (
@@ -9,6 +19,8 @@ export const Button = ({ className, children, disabled, label, onClick, isFullWi
                 className={twMerge(`btn btn-neutral ${isFullWidth ? 'w-full' : ''} ${className}`)}
                 disabled={disabled}
                 onClick={handleClick}
+                ref={ref}
+                type={type}
             >
                 {children ? children : label ? label : 'Button'}
             </button>

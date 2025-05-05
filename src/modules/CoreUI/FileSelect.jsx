@@ -49,7 +49,7 @@ export const FileSelect = ({
                 type="file"
                 {...inputProps}
             />
-            <Button className={btnClassName} label={label} {...btnProps} onClick={handleClick} />
+            <Button className={btnClassName} label={label} type="button" {...btnProps} onClick={handleClick} />
             {fileName ? (
                 <div className="flex items-center">
                     <div className="mr-4 font-medium text-gray-700">{fileName}</div>

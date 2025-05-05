@@ -13,7 +13,8 @@ export const DatePicker = ({
     currentDate = new Date(),
     fromYear = new Date().getFullYear() - 100,
     inputProps,
-    onDateChange,
+    labelProps,
+    onChange,
     toYear = new Date().getFullYear(),
 }) => {
     const [showCalendar, setShowCalendar] = useState(false)
@@ -31,7 +32,7 @@ export const DatePicker = ({
         }
         const { formattedDate } = formatDate(dateObj)
         setSelectedDate(dateObj)
-        onDateChange?.(formattedDate)
+        onChange?.(formattedDate)
         handleHideCalendar()
     }
 
@@ -42,7 +43,7 @@ export const DatePicker = ({
     return (
         <>
             <Input
-                labelProps={{ content: 'Date of birth' }}
+                labelProps={labelProps}
                 onClick={handleShowCalendar}
                 placeholder="Enter your date of birth"
                 ref={inputRef}

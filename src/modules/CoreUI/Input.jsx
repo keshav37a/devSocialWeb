@@ -32,7 +32,7 @@ export const Input = ({
                 placeholder={placeholder}
                 ref={ref}
                 type={type}
-                value={value}
+                value={value ?? ''}
                 {...inputProps}
             />
             {errorProps ? <span className={twMerge(`text-red-400 ${errorClassName}`)}>{errorContent}</span> : null}

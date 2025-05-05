@@ -53,8 +53,8 @@ export const Dropdown = ({
         <div className="relative inline-block text-left">
             <fieldset className="fieldset">
                 {label ? <label className={twMerge(`fieldset-label ${labelClassName}`)}>{labelContent}</label> : null}
-                <button
-                    className="input inline-flex w-full cursor-pointer items-center justify-between rounded-2xl border border-gray-300 px-4 py-2 text-sm font-medium text-[#EDF1FE] shadow-sm hover:bg-[#2b2f37] focus:outline-none"
+                <Button
+                    className="input inline-flex w-full min-w-50 cursor-pointer items-center justify-between rounded-2xl border border-gray-300 px-4 py-2 text-sm font-medium text-[#EDF1FE] shadow-sm hover:bg-[#2b2f37] focus:outline-none"
                     onClick={handleOpenDropdown}
                     ref={dropdownRef}
                 >
@@ -62,7 +62,7 @@ export const Dropdown = ({
                     <ChevronDownIcon
                         className={`ml-2 h-5 w-5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
                     />
-                </button>
+                </Button>
             </fieldset>
 
             {isOpen ? (
@@ -78,6 +78,7 @@ export const Dropdown = ({
                                     className={`w-full cursor-pointer px-4 py-2 text-left text-sm text-[#EDF1FE] hover:bg-[#2b2f37] ${index === 0 ? 'hover:rounded-t-2xl' : ''} ${index === items.length - 1 ? 'hover:rounded-b-2xl' : ''}`}
                                     key={id || _id || value}
                                     onClick={() => handleChangeDropdownValue(item)}
+                                    type="button"
                                 >
                                     {displayItemLabelKey ? restProps?.[displayItemLabelKey] : String(item)}
                                 </Button>

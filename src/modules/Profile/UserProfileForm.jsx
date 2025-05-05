@@ -158,7 +158,7 @@ export const UserProfileForm = ({
                 <TextArea label={{ content: 'About' }} name="About" onChange={handleAboutChange} value={about} />
                 <DatePicker
                     currentDate={existingDOB ? new Date(existingDOB) : new Date()}
-                    onDateChange={handleDateChange}
+                    onChange={handleDateChange}
                 />
                 <Dropdown
                     displayItemLabelKey="displayName"
