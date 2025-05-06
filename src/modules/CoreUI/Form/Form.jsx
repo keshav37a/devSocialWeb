@@ -1,15 +1,14 @@
 import { useState } from 'react'
 
-import { Button, DatePicker, Dropdown, Input, TextArea } from '@CoreUI'
-import { FileSelect } from '@CoreUI/FileSelect'
-import { ErrorMessage, Label } from '@CoreUI/Form'
-import { INPUT_FIELD_TYPES } from '@CoreUI/Form/constants'
+import { Button, DatePicker, Dropdown, ErrorMessage, FileSelect, Input, Label, TextArea } from '@CoreUI/Form'
+import { FORM_FIELD_TYPES, INPUT_FIELD_TYPES } from '@CoreUI/Form/constants'
 
 export const Form = ({
     fields = [],
     fieldChangeCallbacks,
     initialValues = {},
     onSubmit,
+    onFieldChange,
     submitBtnProps = {},
     validations = {},
 }) => {
@@ -39,18 +38,19 @@ export const Form = ({
         onSubmit?.(values)
     }
 
-    const handleFieldChange = (name) => (eventOrValue) =>
-        setValues((prev) => {
-            const newState = { ...prev }
-            if (typeof fieldChangeCallbacks?.[name] === 'function') {
-                newState[name] = fieldChangeCallbacks?.[name](eventOrValue)
-            } else if (typeof eventOrValue?.target?.value === 'string') {
-                newState[name] = eventOrValue?.target?.value
-            } else {
-                newState[name] = eventOrValue
-            }
-            return newState
-        })
+    const handleFieldChange = (name) => (eventOrValue) => {
+        let newValue = null
+        if (typeof fieldChangeCallbacks?.[name] === 'function') {
+            newValue = fieldChangeCallbacks?.[name](eventOrValue)
+        } else if (typeof eventOrValue?.target?.value === 'string' || typeof eventOrValue?.target?.value === 'number') {
+            newValue = eventOrValue?.target?.value
+        } else {
+            newValue = eventOrValue
+        }
+        const updatedValues = { ...values, [name]: newValue }
+        onFieldChange?.({ [name]: newValue }, updatedValues)
+        setValues((prev) => ({ ...prev, [name]: newValue }))
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -62,13 +62,13 @@ export const Form = ({
                         {labelProps ? <Label className="mb-2" htmlFor={id} {...labelProps} /> : null}
                         {INPUT_FIELD_TYPES.includes(type) ? (
                             <Input {...restProps} {...restInputProps} />
-                        ) : type === 'textArea' ? (
+                        ) : type === FORM_FIELD_TYPES.TEXTAREA ? (
                             <TextArea {...restProps} {...restInputProps} />
-                        ) : type === 'dropdown' ? (
+                        ) : type === FORM_FIELD_TYPES.DROPDOWN ? (
                             <Dropdown {...restProps} {...restInputProps} />
-                        ) : type === 'datePicker' ? (
+                        ) : type === FORM_FIELD_TYPES.DATEPICKER ? (
                             <DatePicker {...restProps} {...restInputProps} />
-                        ) : type === 'fileSelect' ? (
+                        ) : type === FORM_FIELD_TYPES.FILE_SELECT ? (
                             <FileSelect onFileSelect={handleFieldChange(name)} {...restProps} {...restInputProps} />
                         ) : null}
                         <div className="mt-1 h-5">

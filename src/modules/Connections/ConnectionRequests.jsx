@@ -1,4 +1,5 @@
-import { Button, Card, Image, Loading } from '@CoreUI'
+import { Card, Image, Loading } from '@CoreUI'
+import { Button } from '@CoreUI/Form'
 
 import { useGetUserConnectionRequestsQuery, useReviewConnectionRequestMutation } from '@Connections/connectionsApi'
 

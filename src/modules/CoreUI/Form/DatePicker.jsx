@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 
 import { DayPicker } from 'react-day-picker'
 
-import { Input } from '@CoreUI'
+import { Input } from '@CoreUI/Form'
 import { useOutsideClick } from 'hooks'
 
 import 'react-day-picker/dist/style.css'

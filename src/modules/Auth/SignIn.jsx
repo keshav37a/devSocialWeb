@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 
 import { Card, Loading } from '@CoreUI'
 import { Form } from '@CoreUI/Form'
+import { FORM_FIELD_TYPES } from '@CoreUI/Form/constants'
 
 import { useSignInMutation } from '@Auth/authApi'
 
@@ -30,7 +31,7 @@ export const SignIn = ({ onSignUpToggle: handleSignUpToggle }) => {
                         {
                             id: 'email',
                             name: 'email',
-                            type: 'email',
+                            type: FORM_FIELD_TYPES.EMAIL,
                             labelProps: { content: 'Email' },
                             placeholder: 'Enter your email',
                             required: true,
@@ -39,7 +40,7 @@ export const SignIn = ({ onSignUpToggle: handleSignUpToggle }) => {
                         {
                             id: 'password',
                             name: 'password',
-                            type: 'password',
+                            type: FORM_FIELD_TYPES.PASSWORD,
                             labelProps: { content: 'Password' },
                             placeholder: 'Enter your password',
                             required: true,

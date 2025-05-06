@@ -6,6 +6,7 @@ import { useSignUpMutation } from './authApi'
 
 import { Card, Loading } from '@CoreUI'
 import { Form } from '@CoreUI/Form'
+import { FORM_FIELD_TYPES } from '@CoreUI/Form/constants'
 
 import { GENDER_OPTIONS } from 'src/constants'
 
@@ -16,6 +17,7 @@ const signUpFormFields = [
         name: 'firstName',
         placeholder: 'Enter your first name',
         required: true,
+        type: FORM_FIELD_TYPES.TEXT,
     },
     {
         id: 'lastName',
@@ -23,6 +25,7 @@ const signUpFormFields = [
         name: 'lastName',
         placeholder: 'Enter your last name',
         required: true,
+        type: FORM_FIELD_TYPES.TEXT,
     },
     {
         id: 'email',
@@ -30,7 +33,7 @@ const signUpFormFields = [
         name: 'email',
         placeholder: 'example@email.com',
         required: true,
-        type: 'email',
+        type: FORM_FIELD_TYPES.EMAIL,
     },
     {
         id: 'password',
@@ -38,7 +41,7 @@ const signUpFormFields = [
         name: 'password',
         placeholder: 'Enter your password',
         required: true,
-        type: 'password',
+        type: FORM_FIELD_TYPES.PASSWORD,
     },
     {
         id: 'confirmPassword',
@@ -46,14 +49,14 @@ const signUpFormFields = [
         name: 'confirmPassword',
         placeholder: 'Confirm password',
         required: true,
-        type: 'password',
+        type: FORM_FIELD_TYPES.PASSWORD,
     },
     {
         id: 'dob',
         name: 'dob',
-        type: 'datePicker',
         labelProps: { content: 'Date of birth' },
         required: true,
+        type: FORM_FIELD_TYPES.DATEPICKER,
     },
     {
         id: 'about',
@@ -61,17 +64,17 @@ const signUpFormFields = [
         name: 'about',
         placeholder: 'Write a few lines about yourself',
         required: true,
-        type: 'textArea',
+        type: FORM_FIELD_TYPES.TEXTAREA,
     },
     {
         id: 'gender',
         name: 'gender',
-        type: 'dropdown',
         labelProps: { content: 'Gender' },
         displayItemLabelKey: 'displayName',
         items: GENDER_OPTIONS,
         valueKey: 'value',
         required: true,
+        type: FORM_FIELD_TYPES.DROPDOWN,
     },
 ]
 
@@ -112,6 +115,9 @@ export const SignUp = ({ onToggleSignIn: handleToggleSignIn }) => {
                     submitBtnProps={{ className: 'w-48', label: 'Sign up' }}
                     validations={validations}
                 />
+                <p className="mt-4 cursor-pointer text-center" onClick={handleToggleSignIn}>
+                    Already have an account? Sign in
+                </p>
             </Card>
         </>
     )

@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 
 import { twMerge } from 'tailwind-merge'
 
-import { Button, Input } from '@CoreUI'
+import { Button, Input } from '@CoreUI/Form'
 import { CrossIcon } from 'icons'
 
 export const FileSelect = ({
@@ -36,7 +36,7 @@ export const FileSelect = ({
 
     const handleDeleteFile = () => {
         setFileName(null)
-        onFileRemove()
+        onFileRemove?.()
     }
 
     return (

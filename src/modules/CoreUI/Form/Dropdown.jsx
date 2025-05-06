@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 
 import { twMerge } from 'tailwind-merge'
 
-import { Button } from '@CoreUI/Button'
+import { Button } from '@CoreUI/Form'
 import { useOutsideClick } from 'hooks/useOutsideClick'
 import { ChevronDownIcon } from 'icons'
 

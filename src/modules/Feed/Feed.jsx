@@ -16,14 +16,18 @@ export const Feed = () => {
         <Loading isLoading={isLoading}>
             <div className="feed">
                 {feed && feed.length > 0
-                    ? feed.map(({ _id, about, age, fullName, gender, photoUrl }) => (
+                    ? feed.map(({ _id, about, age, firstName, lastName, gender, photoUrl }) => (
                           <UserCard
                               about={about}
                               age={age}
-                              cardProps={{ containerProps: { className: 'mb-6' } }}
-                              fullName={fullName}
+                              cardProps={{
+                                  containerProps: { className: 'mb-6' },
+                                  cardProps: { className: 'w-[60%] max-w-120' },
+                              }}
+                              firstName={firstName}
                               gender={gender}
                               key={_id}
+                              lastName={lastName}
                               onSendRequest={handleSendConnectionRequest}
                               photoUrl={photoUrl}
                               userId={_id}

@@ -1,4 +1,5 @@
-import { Button, Card, Image } from '@CoreUI'
+import { Card, Image } from '@CoreUI'
+import { Button } from '@CoreUI/Form'
 
 import { getGenderDisplayName } from 'src/utils'
 

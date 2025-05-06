@@ -22,7 +22,7 @@ export const formatDate = (dateObj) => {
     const date = dateObj.getDate()
 
     const dateString = date > 9 ? date : `0${date}`
-    const monthString = month > 9 ? month + 1 : `0${month + 1}`
+    const monthString = month > 8 ? month + 1 : `0${month + 1}`
     const yearString = dateObj.getFullYear()
 
     return {
@@ -31,6 +31,14 @@ export const formatDate = (dateObj) => {
         year: yearString,
         displayDate: `${dateString}-${monthString}-${yearString}`,
         formattedDate: `${yearString}-${monthString}-${dateString}`,
+        utcDate: new Date(
+            dateObj.getUTCFullYear(),
+            dateObj.getUTCMonth(),
+            dateObj.getUTCDate(),
+            dateObj.getUTCHours(),
+            dateObj.getUTCMinutes(),
+            dateObj.getUTCSeconds()
+        ),
     }
 }
 

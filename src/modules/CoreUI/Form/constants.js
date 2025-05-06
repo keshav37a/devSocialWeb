@@ -1,1 +1,17 @@
-export const INPUT_FIELD_TYPES = ['input', 'text', 'password', 'email']
+export const FORM_FIELD_TYPES = {
+    DATEPICKER: 'DATEPICKER',
+    DROPDOWN: 'DROPDOWN',
+    EMAIL: 'EMAIL',
+    FILE_SELECT: 'FILE_SELECT',
+    INPUT: 'INPUT',
+    PASSWORD: 'PASSWORD',
+    TEXT: 'TEXT',
+    TEXTAREA: 'TEXTAREA',
+}
+
+export const INPUT_FIELD_TYPES = [
+    FORM_FIELD_TYPES.INPUT,
+    FORM_FIELD_TYPES.TEXT,
+    FORM_FIELD_TYPES.PASSWORD,
+    FORM_FIELD_TYPES.EMAIL,
+]

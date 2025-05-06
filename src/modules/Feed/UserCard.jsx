@@ -1,4 +1,5 @@
-import { Button, Card, Image } from '@CoreUI'
+import { Card, Image } from '@CoreUI'
+import { Button } from '@CoreUI/Form'
 
 import { getGenderDisplayName } from 'src/utils'
 
@@ -8,7 +9,6 @@ export const UserCard = ({
     cardProps,
     dpRef,
     firstName,
-    fullName,
     gender,
     isCenter = true,
     lastName,
@@ -30,7 +30,7 @@ export const UserCard = ({
                 imgProps={{ className: 'object-contain', ref: dpRef }}
                 src={photoUrl}
             />
-            <h2 className="card-title break-all">{fullName || `${firstName} ${lastName}`}</h2>
+            <h2 className="card-title break-all">{`${firstName} ${lastName}`}</h2>
             <p>Age: {age} years</p>
             <p>Gender: {getGenderDisplayName(gender)}</p>
             <p className="break-all">{about}</p>
