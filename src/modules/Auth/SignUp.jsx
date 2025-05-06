@@ -107,12 +107,12 @@ export const SignUp = ({ onToggleSignIn: handleToggleSignIn }) => {
         <>
             <Loading isLoading={isSignUpLoading} />
             <Card isCenter cardProps={{ className: 'w-[60%] max-w-120', isAnimate: false }} className="mt-16">
-                <h3>Sign up</h3>
                 <Form
                     fieldChangeCallbacks={fieldChangeCallbacks}
                     fields={signUpFormFields}
                     onSubmit={handleSignUpHelper}
                     submitBtnProps={{ className: 'w-48', label: 'Sign up' }}
+                    title="Sign up"
                     validations={validations}
                 />
                 <p className="mt-4 cursor-pointer text-center" onClick={handleToggleSignIn}>

@@ -25,7 +25,6 @@ export const SignIn = ({ onSignUpToggle: handleSignUpToggle }) => {
         <>
             <Loading isLoading={isSignInLoading} />
             <Card isCenter cardProps={{ className: 'w-[60%] max-w-120', isAnimate: false }} className="mt-16">
-                <h3>Sign in</h3>
                 <Form
                     fields={[
                         {
@@ -49,6 +48,7 @@ export const SignIn = ({ onSignUpToggle: handleSignUpToggle }) => {
                     ]}
                     onSubmit={handleSignIn}
                     submitBtnProps={{ className: 'w-48', label: 'Sign in' }}
+                    title="Sign in"
                 />
                 <p className="mt-2 cursor-pointer text-center" onClick={handleSignUpToggle}>
                     {"Don't have an account? Sign up"}

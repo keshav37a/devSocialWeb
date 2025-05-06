@@ -10,6 +10,7 @@ export const Form = ({
     onSubmit,
     onFieldChange,
     submitBtnProps = {},
+    title,
     validations = {},
 }) => {
     const [values, setValues] = useState(initialValues)
@@ -54,6 +55,7 @@ export const Form = ({
 
     return (
         <form onSubmit={handleSubmit}>
+            {title ? <h3>{title}</h3> : null}
             {fields.map(({ className = '', errorProps, id, labelProps, name, type = 'text', ...restInputProps }) => {
                 const restProps = { id, name, type, onChange: handleFieldChange(name), value: values[name] ?? '' }
                 const { content: errorContent, className: errorClassName, ...restErrorProps } = errorProps || {}

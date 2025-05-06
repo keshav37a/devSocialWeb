@@ -141,6 +141,7 @@ export const UserProfileForm = ({ cardProps, dpRef, isCenter, onChangeUser, onSu
                 onFieldChange={handleChangeFields}
                 onSubmit={handleEditUserProfileForm}
                 submitBtnProps={{ label: 'Update', disabled: !isFormChanged && !profileImageFile }}
+                title="Update your profile"
             />
         </Card>
     )
