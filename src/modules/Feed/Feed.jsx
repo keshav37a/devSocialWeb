@@ -11,29 +11,28 @@ export const Feed = () => {
 
     const { data: feed, isLoading } = useGetUserFeedQuery(null, { skip: !token })
     const [handleSendConnectionRequest] = useSendConnectionRequestMutation()
+    const { _id, about, age, firstName, gender, lastName, photoUrl } = feed?.[0] || {}
 
     return (
         <Loading isLoading={isLoading}>
             <div className="feed">
-                {feed && feed.length > 0
-                    ? feed.map(({ _id, about, age, firstName, lastName, gender, photoUrl }) => (
-                          <UserCard
-                              about={about}
-                              age={age}
-                              cardProps={{
-                                  containerProps: { className: 'mb-6' },
-                                  cardProps: { className: 'w-[60%] max-w-120' },
-                              }}
-                              firstName={firstName}
-                              gender={gender}
-                              key={_id}
-                              lastName={lastName}
-                              onSendRequest={handleSendConnectionRequest}
-                              photoUrl={photoUrl}
-                              userId={_id}
-                          />
-                      ))
-                    : null}
+                {feed && feed.length > 0 ? (
+                    <UserCard
+                        about={about}
+                        age={age}
+                        cardProps={{
+                            containerProps: { className: 'mb-6' },
+                            cardProps: { className: 'w-[60%] max-w-120' },
+                        }}
+                        firstName={firstName}
+                        gender={gender}
+                        key={_id}
+                        lastName={lastName}
+                        onSendRequest={handleSendConnectionRequest}
+                        photoUrl={photoUrl}
+                        userId={_id}
+                    />
+                ) : null}
             </div>
         </Loading>
     )

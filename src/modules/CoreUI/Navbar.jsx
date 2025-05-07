@@ -19,7 +19,7 @@ export const Navbar = () => {
         <div className="navbar bg-base-300 shadow-sm">
             <div className="flex-1">
                 <Link className="btn text-xl btn-ghost" to="/">
-                    DevTinder
+                    DevSocial
                 </Link>
             </div>
             <div className="flex gap-2">

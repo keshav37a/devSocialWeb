@@ -20,7 +20,7 @@ export const UserConnectionCard = ({ _id, about, age, fullName, gender, onRemove
                 imgProps={{ className: 'rounded-full' }}
                 src={photoUrl}
             />
-            <div className="user-content">
+            <div className="user-content grow-1">
                 <h2 className="card-title">{fullName}</h2>
                 <p>{`${age}, ${getGenderDisplayName(gender)}`}</p>
                 <p className="mt-2">{about}</p>
