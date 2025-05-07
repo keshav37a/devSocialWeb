@@ -6,6 +6,9 @@ import eslint from 'vite-plugin-eslint'
 
 // https://vite.dev/config/
 export default defineConfig({
+    build: {
+        minify: 'terser',
+    },
     plugins: [eslint(), react(), tailwindcss()],
     resolve: {
         alias: {
