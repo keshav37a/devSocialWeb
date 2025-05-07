@@ -1,4 +1,4 @@
-export const BASE_URL = import.meta.env.VITE_DEV_BE_BASE_URL
+export const BASE_URL = import.meta.env.VITE_BE_BASE_URL
 
 export const GENDER_OPTIONS = [
     {
