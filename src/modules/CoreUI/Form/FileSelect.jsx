@@ -53,7 +53,7 @@ export const FileSelect = ({
             {fileName ? (
                 <div className="flex items-center">
                     <div className="mr-4 font-medium text-gray-700">{fileName}</div>
-                    <CrossIcon className="h-3 w-3 cursor-pointer" onClick={handleDeleteFile} />
+                    <CrossIcon className="cursor-pointer" onClick={handleDeleteFile} size={15} />
                 </div>
             ) : null}
             {errorProps ? <span className={twMerge(`text-red-400 ${errorClassName}`)}>{errorContent}</span> : null}

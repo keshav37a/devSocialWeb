@@ -1,16 +1,8 @@
-export const CrossIcon = ({ className = '', onClick: handleClick }) => (
-    <svg
-        className={className}
-        fill="currentColor"
-        onClick={handleClick}
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-    >
+import { SVGWrapper } from 'icons/SVGWrapper'
+
+export const CrossIcon = ({ strokeWidth = '2.5', size = 10, ...restIconProps }) => (
+    <SVGWrapper height={size} strokeWidth={strokeWidth} width={size} {...restIconProps}>
         <line x1="18" x2="6" y1="6" y2="18" />
         <line x1="6" x2="18" y1="6" y2="18" />
-    </svg>
+    </SVGWrapper>
 )
