@@ -4,6 +4,7 @@ import { Button, DatePicker, Dropdown, ErrorMessage, FileSelect, Input, Label, T
 import { FORM_FIELD_TYPES, INPUT_FIELD_TYPES } from '@CoreUI/Form/constants'
 
 export const Form = ({
+    className = '',
     fields = [],
     fieldChangeCallbacks,
     initialValues = {},
@@ -54,37 +55,50 @@ export const Form = ({
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className={`form ${className}`} onSubmit={handleSubmit}>
             {title ? <h3>{title}</h3> : null}
-            {fields.map(({ className = '', errorProps, id, labelProps, name, type = 'text', ...restInputProps }) => {
-                const restProps = { id, name, type, onChange: handleFieldChange(name), value: values[name] ?? '' }
-                const { content: errorContent, className: errorClassName, ...restErrorProps } = errorProps || {}
-                return (
-                    <div className={`field-unit my-1 ${className}`} key={id}>
-                        {labelProps ? <Label className="mb-2" htmlFor={id} {...labelProps} /> : null}
-                        {INPUT_FIELD_TYPES.includes(type) ? (
-                            <Input {...restProps} {...restInputProps} />
-                        ) : type === FORM_FIELD_TYPES.TEXTAREA ? (
-                            <TextArea {...restProps} {...restInputProps} />
-                        ) : type === FORM_FIELD_TYPES.DROPDOWN ? (
-                            <Dropdown {...restProps} {...restInputProps} />
-                        ) : type === FORM_FIELD_TYPES.DATEPICKER ? (
-                            <DatePicker {...restProps} {...restInputProps} />
-                        ) : type === FORM_FIELD_TYPES.FILE_SELECT ? (
-                            <FileSelect onFileSelect={handleFieldChange(name)} {...restProps} {...restInputProps} />
-                        ) : null}
-                        <div className="mt-1 h-5">
-                            {errorContent || errorMessageData[name] ? (
-                                <ErrorMessage
-                                    className={errorClassName}
-                                    content={errorContent || errorMessageData[name]}
-                                    {...restErrorProps}
-                                />
+            {fields.map(
+                ({
+                    className = '',
+                    errorProps,
+                    id,
+                    labelProps,
+                    name,
+                    noError = true,
+                    type = 'text',
+                    ...restInputProps
+                }) => {
+                    const restProps = { id, name, type, onChange: handleFieldChange(name), value: values[name] ?? '' }
+                    const { content: errorContent, className: errorClassName, ...restErrorProps } = errorProps || {}
+                    return (
+                        <div className={`field-unit my-1 ${className}`} key={id}>
+                            {labelProps ? <Label className="mb-2" htmlFor={id} {...labelProps} /> : null}
+                            {INPUT_FIELD_TYPES.includes(type) ? (
+                                <Input {...restProps} {...restInputProps} />
+                            ) : type === FORM_FIELD_TYPES.TEXTAREA ? (
+                                <TextArea {...restProps} {...restInputProps} />
+                            ) : type === FORM_FIELD_TYPES.DROPDOWN ? (
+                                <Dropdown {...restProps} {...restInputProps} />
+                            ) : type === FORM_FIELD_TYPES.DATEPICKER ? (
+                                <DatePicker {...restProps} {...restInputProps} />
+                            ) : type === FORM_FIELD_TYPES.FILE_SELECT ? (
+                                <FileSelect onFileSelect={handleFieldChange(name)} {...restProps} {...restInputProps} />
                             ) : null}
+                            {!noError && (
+                                <div className="mt-1 h-5">
+                                    {errorContent || errorMessageData[name] ? (
+                                        <ErrorMessage
+                                            className={errorClassName}
+                                            content={errorContent || errorMessageData[name]}
+                                            {...restErrorProps}
+                                        />
+                                    ) : null}
+                                </div>
+                            )}
                         </div>
-                    </div>
-                )
-            })}
+                    )
+                }
+            )}
             <Button
                 isCenter
                 className={`my-1 ${submitBtnClassName}`}

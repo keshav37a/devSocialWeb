@@ -36,7 +36,10 @@ export const ConnectionRequests = () => {
                               />
                               <div className="user-content">
                                   <h2 className="card-title">{fullName}</h2>
-                                  <p>{`${age}, ${getGenderDisplayName(gender)}`}</p>
+                                  <p>
+                                      {age ?? ''}
+                                      {gender ? `, ${getGenderDisplayName(gender)}` : ''}
+                                  </p>
                                   <p className="mt-2">{about}</p>
                               </div>
                               <div className="btn-container flex-end ml-auto flex min-w-80">

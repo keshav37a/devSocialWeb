@@ -3,8 +3,9 @@ import { Button } from '@CoreUI/Form'
 
 import { getGenderDisplayName } from 'src/utils'
 
-export const UserConnectionCard = ({ _id, about, age, fullName, gender, onRemoveConnection, photoUrl }) => {
+export const UserConnectionCard = ({ _id, about, age, fullName, gender, onAddChat, onRemoveConnection, photoUrl }) => {
     const handleRemoveConnection = () => onRemoveConnection?.()
+    const handleAddChat = () => onAddChat?.()
 
     return (
         <Card
@@ -22,10 +23,16 @@ export const UserConnectionCard = ({ _id, about, age, fullName, gender, onRemove
             />
             <div className="user-content grow-1">
                 <h2 className="card-title">{fullName}</h2>
-                <p>{`${age}, ${getGenderDisplayName(gender)}`}</p>
+                <p>
+                    {age ?? ''}
+                    {gender ? `, ${getGenderDisplayName(gender)}` : ''}
+                </p>
                 <p className="mt-2">{about}</p>
             </div>
-            <Button className="ml-auto" label="Remove connection" onClick={handleRemoveConnection} />
+            <div className="flex flex-col justify-center">
+                <Button className="ml-auto" label="Remove connection" onClick={handleRemoveConnection} />
+                <Button className="mt-2 ml-auto btn-primary" label="Chat" onClick={handleAddChat} />
+            </div>
         </Card>
     )
 }

@@ -13,6 +13,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@Auth': path.resolve(__dirname, './src/modules/Auth'),
+            '@Chat': path.resolve(__dirname, './src/modules/Chat'),
             '@Connections': path.resolve(__dirname, './src/modules/Connections'),
             '@CoreUI': path.resolve(__dirname, './src/modules/CoreUI'),
             '@Profile': path.resolve(__dirname, './src/modules/Profile'),

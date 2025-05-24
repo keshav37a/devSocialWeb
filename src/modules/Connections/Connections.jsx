@@ -1,5 +1,9 @@
+import { useDispatch } from 'react-redux'
+
 import { UserConnectionCard } from '@Connections/UserConnectionCard'
 import { Loading } from '@CoreUI'
+
+import { addChat } from '@Chat/chatSlice'
 
 import { useGetUserConnectionsQuery, useRemoveConnectionMutation } from '@Connections/connectionsApi'
 
@@ -7,10 +11,15 @@ import { getCookieValue } from 'src/utils'
 
 export const Connections = () => {
     const token = getCookieValue('token')
+
+    const dispatch = useDispatch()
     const { data: userConnections, isLoading } = useGetUserConnectionsQuery(null, { skip: !token })
     const [handleRemoveConnection] = useRemoveConnectionMutation()
 
     const handleRemoveConnectionHelper = (userId) => () => handleRemoveConnection({ userId })
+    const handleAddChat = (userData) => () => {
+        dispatch(addChat(userData))
+    }
 
     return (
         <Loading isLoading={isLoading}>
@@ -22,6 +31,7 @@ export const Connections = () => {
                           fullName={fullName}
                           gender={gender}
                           key={_id}
+                          onAddChat={handleAddChat({ _id, fullName })}
                           onRemoveConnection={handleRemoveConnectionHelper(_id)}
                           photoUrl={photoUrl}
                       />

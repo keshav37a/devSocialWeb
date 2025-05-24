@@ -139,6 +139,7 @@ export default defineConfig([
                 alias: {
                     map: [
                         ['@Auth', './src/modules/Auth'],
+                        ['@Chat', './src/modules/Chat'],
                         ['@Connections', './src/modules/Connections'],
                         ['@CoreUI', './src/modules/CoreUI'],
                         ['@Feed', './src/modules/Feed'],

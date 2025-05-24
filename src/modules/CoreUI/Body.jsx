@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate } from 'react-router'
 
+import { Chat } from '@Chat'
 import { Footer, Loading, Navbar } from '@CoreUI'
 
 import { signInUser } from '@Auth/authSlice'
@@ -16,6 +17,8 @@ export const Body = () => {
     const navigate = useNavigate()
     const { pathname } = useLocation()
     const { user } = useSelector((state) => state.auth)
+    const { showChat, ongoingChats } = useSelector((state) => state.chat)
+
     const token = getCookieValue('token')
 
     const {
@@ -53,6 +56,9 @@ export const Body = () => {
                     <Outlet />
                 </div>
                 <Footer />
+                {showChat && ongoingChats.length > 0
+                    ? ongoingChats.map(({ _id, ...restProps }) => <Chat key={_id} {...restProps} />)
+                    : null}
             </div>
         </Loading>
     )
