@@ -70,3 +70,15 @@ export const scrollToBottom = (containerRef) => {
     const container = containerRef.current
     container.scrollTop = container.scrollHeight
 }
+
+export const getTimeFromDateInHHMM = (time) => {
+    if (typeof time === 'string') {
+        time = new Date(time)
+    }
+    if (!time) {
+        return ''
+    }
+    const hours = time.getHours()
+    const minutes = time.getMinutes()
+    return { hours, minutes, formattedTime: `${hours}:${minutes}` }
+}

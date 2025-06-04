@@ -18,7 +18,6 @@ import { scrollToBottom } from 'src/utils'
 const getRoomId = ({ signedInUserId, partnerUserId }) => `${signedInUserId}${partnerUserId}`.split('').sort().join('')
 
 export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
-    console.log('partnerUser: ', partnerUser)
     const { _id: signedInUserId, photoUrl: signedInUserPhotoUrl, fullName: signedInUserName } = signedInUser
     const { _id: partnerUserId, fullName: partnerUserName, photoUrl: partnerUserPhotoUrl } = partnerUser
     const dispatch = useDispatch()
@@ -39,15 +38,16 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
     )
 
     const handleSendMessage = ({ message }) => {
-        socket.emit('SEND_MESSAGE', {
+        const messageData = {
             fromUser: signedInUserId,
             message,
             toUser: partnerUserId,
-            sentAt: new Date(),
-        })
+            sentAt: new Date().toISOString(),
+        }
+        socket.emit('SEND_MESSAGE', messageData)
         dispatch(
             chatMessagesApi.util.updateQueryData(GET_CHAT_MESSAGES_ENDPOINT, roomId, (draft) => {
-                draft.push({ fromUser: signedInUserId, message, roomId, toUser: partnerUserId })
+                draft.push({ ...messageData, roomId })
             })
         )
     }
@@ -82,14 +82,16 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
                     {isLoading ? (
                         <Loading />
                     ) : (
-                        chatMessages?.map(({ message, fromUser, _id }, index) => (
+                        chatMessages?.map(({ fromUser, message, receivedAt, sentAt }, index) => (
                             <ChatMessage
                                 fromUser={fromUser}
-                                key={_id || index}
+                                key={sentAt}
                                 message={message}
                                 partnerUserName={partnerUserName}
                                 partnerUserPhotoUrl={partnerUserPhotoUrl}
                                 prevMessageSenderId={index > 0 ? chatMessages[index - 1]?.fromUser : null}
+                                receivedAt={receivedAt}
+                                sentAt={sentAt}
                                 signedInUserId={signedInUserId}
                                 signedInUserName={signedInUserName}
                                 signedInUserPhotoUrl={signedInUserPhotoUrl}
