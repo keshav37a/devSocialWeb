@@ -20,7 +20,7 @@ export const TextArea = ({
         <fieldset className="fieldset">
             {label ? <label className={twMerge(`fieldset-label ${labelClassName}`)}>{labelContent}</label> : null}
             <textarea
-                className={twMerge(`textarea h-24 w-full ${textareaClassName}`)}
+                className={twMerge(`textarea h-24 w-full focus:outline-none ${textareaClassName}`)}
                 id={id}
                 name={name}
                 onChange={handleChange}

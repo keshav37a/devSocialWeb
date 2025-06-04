@@ -24,7 +24,9 @@ export const Input = ({
         <>
             {labelProps ? <label className={twMerge(`fieldset-label ${labelClassName}`)}>{labelContent}</label> : null}
             <input
-                className={twMerge(`input w-full ${type === 'fileInput' ? 'file-input' : ''} ${inputClassName}`)}
+                className={twMerge(
+                    `input w-full focus:outline-none ${type === 'fileInput' ? 'file-input' : ''} ${inputClassName}`
+                )}
                 id={id}
                 name={name}
                 onChange={handleChange}

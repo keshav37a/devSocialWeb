@@ -65,3 +65,8 @@ export const getGenderDisplayName = (gender) => {
     }
     return gender.charAt(0).toUpperCase() + gender.slice(1)
 }
+
+export const scrollToBottom = (containerRef) => {
+    const container = containerRef.current
+    container.scrollTop = container.scrollHeight
+}

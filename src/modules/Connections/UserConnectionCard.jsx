@@ -29,7 +29,7 @@ export const UserConnectionCard = ({ _id, about, age, fullName, gender, onAddCha
                 </p>
                 <p className="mt-2">{about}</p>
             </div>
-            <div className="flex flex-col justify-center">
+            <div className="card-action-container flex min-w-42 flex-col justify-center">
                 <Button className="ml-auto" label="Remove connection" onClick={handleRemoveConnection} />
                 <Button className="mt-2 ml-auto btn-primary" label="Chat" onClick={handleAddChat} />
             </div>

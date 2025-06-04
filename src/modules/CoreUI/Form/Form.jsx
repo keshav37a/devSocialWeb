@@ -5,6 +5,7 @@ import { FORM_FIELD_TYPES, INPUT_FIELD_TYPES } from '@CoreUI/Form/constants'
 
 export const Form = ({
     className = '',
+    shouldClearOnSubmit,
     fields = [],
     fieldChangeCallbacks,
     initialValues = {},
@@ -28,6 +29,13 @@ export const Form = ({
     const handleSubmit = (e) => {
         e.preventDefault()
         const errorMessageData = {}
+        const fieldData = {}
+        const valuesData = { ...values }
+
+        fields.forEach(({ name, ...restProps }) => {
+            fieldData[name] = { name, ...restProps }
+        })
+
         for (const [key, value] of Object.entries(values)) {
             const rule = validations[key]
             if (rule && rule(value, values)) {
@@ -35,8 +43,13 @@ export const Form = ({
             } else {
                 errorMessageData[key] = null
             }
+
+            if (fieldData[key]?.shouldClearOnSubmit || shouldClearOnSubmit) {
+                valuesData[key] = ''
+            }
         }
         setErrorMessageData(errorMessageData)
+        setValues(valuesData)
         onSubmit?.(values)
     }
 
@@ -58,16 +71,7 @@ export const Form = ({
         <form className={`form ${className}`} onSubmit={handleSubmit}>
             {title ? <h3>{title}</h3> : null}
             {fields.map(
-                ({
-                    className = '',
-                    errorProps,
-                    id,
-                    labelProps,
-                    name,
-                    noError = true,
-                    type = 'text',
-                    ...restInputProps
-                }) => {
+                ({ className = '', errorProps, id, labelProps, name, noError, type = 'text', ...restInputProps }) => {
                     const restProps = { id, name, type, onChange: handleFieldChange(name), value: values[name] ?? '' }
                     const { content: errorContent, className: errorClassName, ...restErrorProps } = errorProps || {}
                     return (

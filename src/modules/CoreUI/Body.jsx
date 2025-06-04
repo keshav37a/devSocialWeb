@@ -56,8 +56,10 @@ export const Body = () => {
                     <Outlet />
                 </div>
                 <Footer />
-                {showChat && ongoingChats.length > 0
-                    ? ongoingChats.map(({ _id, ...restProps }) => <Chat key={_id} {...restProps} />)
+                {showChat && ongoingChats.length > 0 && user?._id
+                    ? ongoingChats.map((partnerUser) => (
+                          <Chat key={partnerUser._id} partnerUser={partnerUser} signedInUser={user} />
+                      ))
                     : null}
             </div>
         </Loading>

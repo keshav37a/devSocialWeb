@@ -31,7 +31,7 @@ export const Connections = () => {
                           fullName={fullName}
                           gender={gender}
                           key={_id}
-                          onAddChat={handleAddChat({ _id, fullName })}
+                          onAddChat={handleAddChat({ _id, about, age, fullName, gender, photoUrl })}
                           onRemoveConnection={handleRemoveConnectionHelper(_id)}
                           photoUrl={photoUrl}
                       />
