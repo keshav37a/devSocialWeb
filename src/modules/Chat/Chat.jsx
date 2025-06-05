@@ -52,11 +52,33 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
         )
     }
 
+    const handleSaveMessage = useCallback(
+        (data) => {
+            dispatch(
+                chatMessagesApi.util.updateQueryData(GET_CHAT_MESSAGES_ENDPOINT, roomId, (draft) => {
+                    const sentAtISOString = new Date(data.sentAt).toISOString()
+                    const messageData = draft.find(
+                        ({ fromUser, toUser, sentAt }) =>
+                            data.fromUser === fromUser &&
+                            data.toUser === toUser &&
+                            data.sentAt &&
+                            sentAtISOString === sentAt
+                    )
+                    if (messageData) {
+                        messageData._id = data._id
+                    }
+                })
+            )
+        },
+        [dispatch, roomId]
+    )
+
     const { socket } = useSocket({
         url: 'http://localhost:7777',
         fromUser: signedInUserId,
         toUser: partnerUserId,
         onReceiveMessage: handleReceiveMessage,
+        onSaveMessage: handleSaveMessage,
     })
     const { data: chatMessages, isLoading } = useGetChatMessagesQuery(roomId)
     const handleToggleChat = () => setIsChatOpen((prev) => !prev)

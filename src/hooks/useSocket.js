@@ -1,50 +1,50 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 import { io } from 'socket.io-client'
 
-export const useSocket = ({ fromUser, onReceiveMessage, toUser, url }) => {
-    const [socket, setSocket] = useState(null)
-
-    const handleJoinRoom = useCallback(() => {
-        socket.emit('JOIN_ROOM', { fromUser, toUser })
-    }, [fromUser, toUser, socket])
+export const useSocket = ({ fromUser, onReceiveMessage, onSaveMessage, toUser, url }) => {
+    const socketRef = useRef(null)
 
     const handleJoinRoomAcknowledge = useCallback((data) => {
         console.log('handle join room acknowledge called: ', data)
     }, [])
 
-    useEffect(() => {
+    const handleReceiveMessage = useCallback((data) => onReceiveMessage?.(data), [onReceiveMessage])
+
+    const handleSaveMessage = useCallback((data) => onSaveMessage?.(data), [onSaveMessage])
+
+    const initialiseSocket = useCallback(() => {
         const socket = io(url, {
-            reconnection: true, // enable reconnection (default)
-            reconnectionAttempts: 5, // try to reconnect up to 5 times
-            reconnectionDelay: 1000, // wait 1s before retrying
-            reconnectionDelayMax: 5000, // max delay between attempts
+            reconnection: false,
         })
-        setSocket(socket)
+        return socket
     }, [url])
 
+    const handleJoinRoom = useCallback((socket) => socket?.emit('JOIN_ROOM', { fromUser, toUser }), [fromUser, toUser])
+
     useEffect(() => {
-        socket?.on('connect', () => {
-            handleJoinRoom()
-        })
-        socket?.on('USER_JOINED_ROOM', (data) => {
-            console.log('user joined room: ', data)
-            handleJoinRoomAcknowledge(data)
-        })
-        socket?.on('RECEIVE_MESSAGE', (data) => {
-            onReceiveMessage?.(data)
-        })
-        const reconnectInterval = setInterval(() => {
+        if (!socketRef.current) {
+            socketRef.current = initialiseSocket()
+            handleJoinRoom(socketRef.current)
+        }
+        const socket = socketRef.current
+        socket?.connect()
+        socket?.on('USER_JOINED_ROOM', handleJoinRoomAcknowledge)
+        socket?.on('RECEIVE_MESSAGE', handleReceiveMessage)
+        socket?.on('SAVE_MESSAGE', handleSaveMessage)
+        const reconnectIntervalId = setInterval(() => {
             if (!socket.connected) {
-                console.log('socket not connected. reconnecting...')
                 socket.connect()
             }
         }, 2000)
         return () => {
+            socket?.off('USER_JOINED_ROOM')
+            socket?.off('RECEIVE_MESSAGE')
+            socket?.off('SAVE_MESSAGE')
             socket?.disconnect()
-            clearInterval(reconnectInterval)
+            clearInterval(reconnectIntervalId)
         }
-    }, [socket, handleJoinRoom, handleJoinRoomAcknowledge, onReceiveMessage])
+    }, [handleReceiveMessage, handleJoinRoomAcknowledge, initialiseSocket, handleSaveMessage, handleJoinRoom])
 
-    return { socket }
+    return { socket: socketRef.current }
 }
