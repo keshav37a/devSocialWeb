@@ -2,13 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useDispatch } from 'react-redux'
 
-import { ChatHeader } from './ChatHeader'
-
-import { ChatMessage } from '@Chat'
+import { ChatHeader, ChatMessage } from '@Chat'
 import { Loading } from '@CoreUI'
 import { Form } from '@CoreUI/Form'
 import { FORM_FIELD_TYPES } from '@CoreUI/Form/constants'
-import { useSocket } from 'hooks'
+import { useDebounce, useSocket } from 'hooks'
 import { SendIcon } from 'icons'
 
 import { chatMessagesApi, GET_CHAT_MESSAGES_ENDPOINT, useGetChatMessagesQuery } from '@Chat/chatApi'
@@ -22,6 +20,7 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
     const { _id: partnerUserId, fullName: partnerUserName, photoUrl: partnerUserPhotoUrl } = partnerUser
     const dispatch = useDispatch()
     const [isChatOpen, setIsChatOpen] = useState(true)
+    const [isTyping, setIsTyping] = useState(false)
 
     const messagesWrapperRef = useRef()
     const roomId = useMemo(() => getRoomId({ signedInUserId, partnerUserId }), [signedInUserId, partnerUserId])
@@ -88,6 +87,8 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
         [dispatch, roomId]
     )
 
+    const handleUserTyping = useCallback(() => setIsTyping(true), [])
+
     const { socket } = useSocket({
         url: 'http://localhost:7777',
         fromUser: signedInUserId,
@@ -95,6 +96,7 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
         onReadMessage: handleReadMessage,
         onReceiveMessage: handleReceiveMessage,
         onSaveMessage: handleSaveMessage,
+        onUserTyping: handleUserTyping,
     })
     const { data: chatMessages, isLoading } = useGetChatMessagesQuery(roomId)
     const handleToggleChat = () => setIsChatOpen((prev) => !prev)
@@ -128,6 +130,20 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
 
         unreadMessages.forEach((msg) => observer.observe(msg))
     }, [chatMessages, socket, roomId])
+
+    useEffect(() => {
+        if (isTyping) {
+            setTimeout(() => {
+                setIsTyping(false)
+            }, [1000])
+        }
+    }, [isTyping])
+
+    const handleInvokeTyping = () => {
+        socket.emit('USER_TYPING', { roomId })
+    }
+
+    const debouncedTyping = useDebounce({ callback: handleInvokeTyping, delay: 200 })
 
     return (
         <div className="fixed right-0 bottom-0 z-500 min-h-8 w-80 cursor-pointer rounded-t-lg bg-base-300 p-2">
@@ -164,6 +180,7 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
                         ))
                     )}
                 </div>
+                {isTyping ? <div className="text-xs">{partnerUserName} is typing</div> : null}
                 <Form
                     className="chat-sumbmit-form flex pt-0.5"
                     fields={[
@@ -172,6 +189,7 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
                             id: 'message',
                             name: 'message',
                             noError: true,
+                            inputProps: { onInput: debouncedTyping },
                             placeholder: 'Enter your message',
                             required: true,
                             shouldClearOnSubmit: true,

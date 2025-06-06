@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react'
 
 import { io } from 'socket.io-client'
 
-export const useSocket = ({ fromUser, onReadMessage, onReceiveMessage, onSaveMessage, toUser, url }) => {
+export const useSocket = ({ fromUser, onReadMessage, onReceiveMessage, onSaveMessage, onUserTyping, toUser, url }) => {
     const socketRef = useRef(null)
 
     const handleJoinRoomAcknowledge = useCallback((data) => {
@@ -24,6 +24,8 @@ export const useSocket = ({ fromUser, onReadMessage, onReceiveMessage, onSaveMes
 
     const handleReadMessage = useCallback((data) => onReadMessage?.(data), [onReadMessage])
 
+    const handleUserTyping = useCallback(() => onUserTyping?.(), [onUserTyping])
+
     useEffect(() => {
         if (!socketRef.current) {
             socketRef.current = initialiseSocket()
@@ -35,6 +37,7 @@ export const useSocket = ({ fromUser, onReadMessage, onReceiveMessage, onSaveMes
         socket?.on('RECEIVE_MESSAGE', handleReceiveMessage)
         socket?.on('SAVE_MESSAGE', handleSaveMessage)
         socket?.on('READ_MESSAGE', handleReadMessage)
+        socket?.on('USER_TYPING', handleUserTyping)
         const reconnectIntervalId = setInterval(() => {
             if (!socket.connected) {
                 socket.connect()
@@ -45,6 +48,7 @@ export const useSocket = ({ fromUser, onReadMessage, onReceiveMessage, onSaveMes
             socket?.off('RECEIVE_MESSAGE')
             socket?.off('SAVE_MESSAGE')
             socket?.off('READ_MESSAGE')
+            socket?.on('USER_TYPING')
             socket?.disconnect()
             clearInterval(reconnectIntervalId)
         }
@@ -55,6 +59,7 @@ export const useSocket = ({ fromUser, onReadMessage, onReceiveMessage, onSaveMes
         handleSaveMessage,
         handleJoinRoom,
         handleReadMessage,
+        handleUserTyping,
     ])
 
     return { socket: socketRef.current }
