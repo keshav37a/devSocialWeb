@@ -8,7 +8,7 @@ import { ChatMessage } from '@Chat'
 import { Loading } from '@CoreUI'
 import { Form } from '@CoreUI/Form'
 import { FORM_FIELD_TYPES } from '@CoreUI/Form/constants'
-import { useSocket } from 'hooks/useSocket'
+import { useSocket } from 'hooks'
 import { SendIcon } from 'icons'
 
 import { chatMessagesApi, GET_CHAT_MESSAGES_ENDPOINT, useGetChatMessagesQuery } from '@Chat/chatApi'
@@ -31,6 +31,21 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
             dispatch(
                 chatMessagesApi.util.updateQueryData(GET_CHAT_MESSAGES_ENDPOINT, roomId, (draft) => {
                     draft.push(data)
+                })
+            )
+        },
+        [dispatch, roomId]
+    )
+
+    const handleReadMessage = useCallback(
+        (data) => {
+            dispatch(
+                chatMessagesApi.util.updateQueryData(GET_CHAT_MESSAGES_ENDPOINT, roomId, (draft) => {
+                    const messageData = draft.find(({ _id: messageId }) => data.messageId === messageId)
+                    if (messageData) {
+                        messageData.isRead = true
+                        messageData.readAt = data.readAt
+                    }
                 })
             )
         },
@@ -77,6 +92,7 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
         url: 'http://localhost:7777',
         fromUser: signedInUserId,
         toUser: partnerUserId,
+        onReadMessage: handleReadMessage,
         onReceiveMessage: handleReceiveMessage,
         onSaveMessage: handleSaveMessage,
     })
@@ -87,6 +103,31 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
     useEffect(() => {
         scrollToBottom(messagesWrapperRef)
     }, [chatMessages])
+
+    useEffect(() => {
+        const unreadMessages = document.querySelectorAll('.unread')
+        const observer = new IntersectionObserver(
+            (entries, observer) => {
+                entries.forEach((entry) => {
+                    const messageEL = entry.target
+                    if (entry.isIntersecting && messageEL.dataset.messageId) {
+                        messageEL.classList.remove('unread')
+
+                        const messageId = messageEL.dataset.messageId
+
+                        socket.emit('READ_MESSAGE', { messageId, readAt: new Date(), roomId })
+
+                        observer.unobserve(messageEL)
+                    }
+                })
+            },
+            {
+                threshold: 1.0,
+            }
+        )
+
+        unreadMessages.forEach((msg) => observer.observe(msg))
+    }, [chatMessages, socket, roomId])
 
     return (
         <div className="fixed right-0 bottom-0 z-500 min-h-8 w-80 cursor-pointer rounded-t-lg bg-base-300 p-2">
@@ -104,11 +145,13 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
                     {isLoading ? (
                         <Loading />
                     ) : (
-                        chatMessages?.map(({ fromUser, message, receivedAt, sentAt }, index) => (
+                        chatMessages?.map(({ _id, fromUser, isRead, message, receivedAt, sentAt }, index) => (
                             <ChatMessage
                                 fromUser={fromUser}
+                                isRead={isRead}
                                 key={sentAt}
                                 message={message}
+                                messageId={_id}
                                 partnerUserName={partnerUserName}
                                 partnerUserPhotoUrl={partnerUserPhotoUrl}
                                 prevMessageSenderId={index > 0 ? chatMessages[index - 1]?.fromUser : null}

@@ -1,8 +1,12 @@
+import { DoubleTickIcon, SingleTickIcon } from 'icons'
+
 import { getTimeFromDateInHHMM } from 'src/utils'
 
 export const ChatMessage = ({
     fromUser,
+    isRead,
     message,
+    messageId,
     signedInUserPhotoUrl,
     partnerUserName,
     partnerUserPhotoUrl,
@@ -18,8 +22,7 @@ export const ChatMessage = ({
     const isPrevMessageFromCurrentSender = prevMessageSenderId === fromUser
     const { formattedTime: messageTime } = getTimeFromDateInHHMM(isMessageFromSignedInUser ? sentAt : receivedAt)
 
-    console.log('sentAt: ', sentAt)
-    console.log('receivedAt: ', receivedAt)
+    const renderIcon = () => (isRead ? <DoubleTickIcon stroke="#EBF9FF" /> : <SingleTickIcon stroke="#EBF9FF" />)
 
     return (
         <div className={`chat-message-container mb-4`}>
@@ -38,9 +41,16 @@ export const ChatMessage = ({
                         {userName}
                     </div>
                     <div className="chat-bubble-container rounded-xl bg-[#5664e7] px-2 pt-2">
-                        <p>{message}</p>
+                        <p
+                            className={`chat-message-content ${isRead || isMessageFromSignedInUser ? '' : 'unread'}`}
+                            data-message-from-signed-in-user={isMessageFromSignedInUser}
+                            data-message-id={messageId}
+                        >
+                            {message}
+                        </p>
                         <div className="chat-message-status-container flex-end mt-0.5 flex w-full">
                             <div className="mr-2 mb-1 ml-auto text-xs opacity-50">{messageTime}</div>
+                            {isMessageFromSignedInUser ? renderIcon() : null}
                         </div>
                     </div>
                 </div>
