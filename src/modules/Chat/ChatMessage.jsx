@@ -1,16 +1,19 @@
+import { useMemo } from 'react'
+
 import { DoubleTickIcon, SingleTickIcon } from 'icons'
 
 import { getTimeFromDateInHHMM } from 'src/utils'
 
 export const ChatMessage = ({
     fromUser,
-    isRead,
     message,
     messageId,
     signedInUserPhotoUrl,
+    participants,
     partnerUserName,
     partnerUserPhotoUrl,
     prevMessageSenderId,
+    readBy,
     receivedAt,
     sentAt,
     signedInUserName,
@@ -21,6 +24,15 @@ export const ChatMessage = ({
     const userName = isMessageFromSignedInUser ? signedInUserName : partnerUserName
     const isPrevMessageFromCurrentSender = prevMessageSenderId === fromUser
     const { formattedTime: messageTime } = getTimeFromDateInHHMM(isMessageFromSignedInUser ? sentAt : receivedAt)
+
+    const participantsOtherThanSignedInUser = useMemo(
+        () => participants.filter((userId) => userId !== signedInUserId).sort(),
+        [participants, signedInUserId]
+    )
+    const participantsReadMessage = useMemo(() => readBy?.map(({ user }) => user).sort(), [readBy])
+    const isRead = participantsReadMessage
+        ? participantsOtherThanSignedInUser.every((userId, index) => userId === participantsReadMessage[index])
+        : false
 
     const renderIcon = () => (isRead ? <DoubleTickIcon stroke="#EBF9FF" /> : <SingleTickIcon stroke="#EBF9FF" />)
 

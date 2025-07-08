@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useDispatch } from 'react-redux'
 
@@ -13,92 +13,89 @@ import { chatMessagesApi, GET_CHAT_MESSAGES_ENDPOINT, useGetChatMessagesQuery } 
 
 import { scrollToBottom } from 'src/utils'
 
-const getRoomId = ({ signedInUserId, partnerUserId }) => `${signedInUserId}${partnerUserId}`.split('').sort().join('')
-
-export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
+export const Chat = ({ participants, partnerUser, signedInUser, onCloseChat }) => {
     const { _id: signedInUserId, photoUrl: signedInUserPhotoUrl, fullName: signedInUserName } = signedInUser
-    const { _id: partnerUserId, fullName: partnerUserName, photoUrl: partnerUserPhotoUrl } = partnerUser
+    const { fullName: partnerUserName, photoUrl: partnerUserPhotoUrl } = partnerUser
     const dispatch = useDispatch()
     const [isChatOpen, setIsChatOpen] = useState(true)
     const [isTyping, setIsTyping] = useState(false)
 
     const messagesWrapperRef = useRef()
-    const roomId = useMemo(() => getRoomId({ signedInUserId, partnerUserId }), [signedInUserId, partnerUserId])
 
-    const handleReceiveMessage = useCallback(
+    const handleGetReceiveMessageEvent = useCallback(
         (data) => {
             dispatch(
-                chatMessagesApi.util.updateQueryData(GET_CHAT_MESSAGES_ENDPOINT, roomId, (draft) => {
+                chatMessagesApi.util.updateQueryData(GET_CHAT_MESSAGES_ENDPOINT, participants, (draft) => {
                     draft.push(data)
                 })
             )
         },
-        [dispatch, roomId]
+        [dispatch, participants]
     )
 
-    const handleReadMessage = useCallback(
+    const handleGetReadMessageEvent = useCallback(
         (data) => {
             dispatch(
-                chatMessagesApi.util.updateQueryData(GET_CHAT_MESSAGES_ENDPOINT, roomId, (draft) => {
+                chatMessagesApi.util.updateQueryData(GET_CHAT_MESSAGES_ENDPOINT, participants, (draft) => {
                     const messageData = draft.find(({ _id: messageId }) => data.messageId === messageId)
                     if (messageData) {
-                        messageData.isRead = true
-                        messageData.readAt = data.readAt
+                        messageData.readBy = messageData.readBy ? [...messageData.readBy, data.readBy] : [data.readBy]
                     }
                 })
             )
         },
-        [dispatch, roomId]
+        [dispatch, participants]
     )
 
-    const handleSendMessage = ({ message }) => {
+    const handleEmitSendMessageEvent = ({ message }) => {
         const messageData = {
             fromUser: signedInUserId,
             message,
-            toUser: partnerUserId,
+            participants,
             sentAt: new Date().toISOString(),
         }
         socket.emit('SEND_MESSAGE', messageData)
         dispatch(
-            chatMessagesApi.util.updateQueryData(GET_CHAT_MESSAGES_ENDPOINT, roomId, (draft) => {
-                draft.push({ ...messageData, roomId })
+            chatMessagesApi.util.updateQueryData(GET_CHAT_MESSAGES_ENDPOINT, participants, (draft) => {
+                draft.push({ ...messageData })
             })
         )
     }
 
-    const handleSaveMessage = useCallback(
+    const handleGetSaveMessageEvent = useCallback(
         (data) => {
             dispatch(
-                chatMessagesApi.util.updateQueryData(GET_CHAT_MESSAGES_ENDPOINT, roomId, (draft) => {
+                chatMessagesApi.util.updateQueryData(GET_CHAT_MESSAGES_ENDPOINT, participants, (draft) => {
                     const sentAtISOString = new Date(data.sentAt).toISOString()
                     const messageData = draft.find(
-                        ({ fromUser, toUser, sentAt }) =>
+                        ({ fromUser, sentAt }) =>
                             data.fromUser === fromUser &&
-                            data.toUser === toUser &&
+                            data.participants.length === participants.length &&
+                            participants.every((userId) => data.participants.includes(userId)) &&
                             data.sentAt &&
                             sentAtISOString === sentAt
                     )
                     if (messageData) {
-                        messageData._id = data._id
+                        messageData._id = data.messageId
                     }
                 })
             )
         },
-        [dispatch, roomId]
+        [dispatch, participants]
     )
 
-    const handleUserTyping = useCallback(() => setIsTyping(true), [])
+    const handleGetUserTypingEvent = useCallback(() => setIsTyping(true), [])
 
     const { socket } = useSocket({
         url: 'http://localhost:7777',
         fromUser: signedInUserId,
-        toUser: partnerUserId,
-        onReadMessage: handleReadMessage,
-        onReceiveMessage: handleReceiveMessage,
-        onSaveMessage: handleSaveMessage,
-        onUserTyping: handleUserTyping,
+        participants,
+        onReadMessage: handleGetReadMessageEvent,
+        onReceiveMessage: handleGetReceiveMessageEvent,
+        onSaveMessage: handleGetSaveMessageEvent,
+        onUserTyping: handleGetUserTypingEvent,
     })
-    const { data: chatMessages, isLoading } = useGetChatMessagesQuery(roomId)
+    const { data: chatMessages, isLoading } = useGetChatMessagesQuery(participants)
     const handleToggleChat = () => setIsChatOpen((prev) => !prev)
     const handleCloseChat = () => onCloseChat?.()
 
@@ -117,7 +114,11 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
 
                         const messageId = messageEL.dataset.messageId
 
-                        socket.emit('READ_MESSAGE', { messageId, readAt: new Date(), roomId })
+                        socket.emit('READ_MESSAGE', {
+                            messageId,
+                            readBy: { user: signedInUserId, readAt: new Date() },
+                            participants,
+                        })
 
                         observer.unobserve(messageEL)
                     }
@@ -127,9 +128,8 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
                 threshold: 1.0,
             }
         )
-
         unreadMessages.forEach((msg) => observer.observe(msg))
-    }, [chatMessages, socket, roomId])
+    }, [chatMessages, socket, signedInUserId, participants])
 
     useEffect(() => {
         if (isTyping) {
@@ -139,11 +139,14 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
         }
     }, [isTyping])
 
-    const handleInvokeTyping = () => {
-        socket.emit('USER_TYPING', { roomId })
+    const handleEmitTypingEvent = () => {
+        socket.emit('USER_TYPING', {
+            fromUser: signedInUserId,
+            participants,
+        })
     }
 
-    const debouncedTyping = useDebounce({ callback: handleInvokeTyping, delay: 200 })
+    const debouncedTyping = useDebounce({ callback: handleEmitTypingEvent, delay: 200 })
 
     return (
         <div className="fixed right-0 bottom-0 z-500 min-h-8 w-80 cursor-pointer rounded-t-lg bg-base-300 p-2">
@@ -161,16 +164,17 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
                     {isLoading ? (
                         <Loading />
                     ) : (
-                        chatMessages?.map(({ _id, fromUser, isRead, message, receivedAt, sentAt }, index) => (
+                        chatMessages?.map(({ _id, fromUser, message, readBy, receivedAt, sentAt }, index) => (
                             <ChatMessage
                                 fromUser={fromUser}
-                                isRead={isRead}
                                 key={sentAt}
                                 message={message}
                                 messageId={_id}
+                                participants={participants}
                                 partnerUserName={partnerUserName}
                                 partnerUserPhotoUrl={partnerUserPhotoUrl}
                                 prevMessageSenderId={index > 0 ? chatMessages[index - 1]?.fromUser : null}
+                                readBy={readBy}
                                 receivedAt={receivedAt}
                                 sentAt={sentAt}
                                 signedInUserId={signedInUserId}
@@ -196,7 +200,7 @@ export const Chat = ({ partnerUser, signedInUser, onCloseChat }) => {
                             type: FORM_FIELD_TYPES.TEXT,
                         },
                     ]}
-                    onSubmit={handleSendMessage}
+                    onSubmit={handleEmitSendMessageEvent}
                     submitBtnProps={{ label: <SendIcon size={15} /> }}
                 />
             </div>

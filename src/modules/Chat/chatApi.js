@@ -8,9 +8,10 @@ export const GET_CHAT_MESSAGES_ENDPOINT = 'getChatMessages'
 export const chatMessagesApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         [GET_CHAT_MESSAGES_ENDPOINT]: builder.query({
-            query: (roomId) => ({
-                url: `/chat-message/messages/room/${roomId}`,
-                method: 'GET',
+            query: (participants) => ({
+                url: `/chat/messages/participants`,
+                method: 'POST',
+                body: participants,
             }),
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {

@@ -2,7 +2,15 @@ import { useCallback, useEffect, useRef } from 'react'
 
 import { io } from 'socket.io-client'
 
-export const useSocket = ({ fromUser, onReadMessage, onReceiveMessage, onSaveMessage, onUserTyping, toUser, url }) => {
+export const useSocket = ({
+    fromUser,
+    onReadMessage,
+    onReceiveMessage,
+    onSaveMessage,
+    onUserTyping,
+    participants,
+    url,
+}) => {
     const socketRef = useRef(null)
 
     const handleJoinRoomAcknowledge = useCallback((data) => {
@@ -20,7 +28,10 @@ export const useSocket = ({ fromUser, onReadMessage, onReceiveMessage, onSaveMes
         return socket
     }, [url])
 
-    const handleJoinRoom = useCallback((socket) => socket?.emit('JOIN_ROOM', { fromUser, toUser }), [fromUser, toUser])
+    const handleJoinRoom = useCallback(
+        (socket) => socket?.emit('JOIN_ROOM', { fromUser, participants }),
+        [fromUser, participants]
+    )
 
     const handleReadMessage = useCallback((data) => onReadMessage?.(data), [onReadMessage])
 
