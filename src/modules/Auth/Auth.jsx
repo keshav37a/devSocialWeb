@@ -1,18 +1,35 @@
 import { useState } from 'react'
 
+import { ForgotPassword } from './ForgotPassword'
 import { SignIn } from './SignIn'
 
 import { SignUp } from './index'
 
 export const Auth = () => {
     const [showSignIn, setShowSignIn] = useState(true)
+    const [showForgotPassword, setShowForgotPassword] = useState(false)
 
-    const handleShowSignUp = () => setShowSignIn(false)
-    const handleShowSignIn = () => setShowSignIn(true)
+    const handleShowSignUp = () => {
+        setShowForgotPassword(false)
+        setShowSignIn(false)
+    }
+    const handleShowSignIn = () => {
+        setShowForgotPassword(false)
+        setShowSignIn(true)
+    }
+    const handleShowForgotPassword = () => {
+        setShowForgotPassword(true)
+    }
 
     return (
         <div>
-            {showSignIn ? <SignIn onSignUpToggle={handleShowSignUp} /> : <SignUp onToggleSignIn={handleShowSignIn} />}
+            {showForgotPassword ? (
+                <ForgotPassword onSignInToggle={handleShowSignIn} />
+            ) : showSignIn ? (
+                <SignIn onForgotPasswordToggle={handleShowForgotPassword} onSignUpToggle={handleShowSignUp} />
+            ) : (
+                <SignUp onSignInToggle={handleShowSignIn} />
+            )}
         </div>
     )
 }

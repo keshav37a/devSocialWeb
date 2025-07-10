@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Button, DatePicker, Dropdown, ErrorMessage, FileSelect, Input, Label, TextArea } from '@CoreUI/Form'
+import { Button, DatePicker, Dropdown, ErrorMessage, FileSelect, Input, Label, Otp, TextArea } from '@CoreUI/Form'
 import { FORM_FIELD_TYPES, INPUT_FIELD_TYPES } from '@CoreUI/Form/constants'
 
 export const Form = ({
@@ -31,6 +31,7 @@ export const Form = ({
         const errorMessageData = {}
         const fieldData = {}
         const valuesData = { ...values }
+        let isError = false
 
         fields.forEach(({ name, ...restProps }) => {
             fieldData[name] = { name, ...restProps }
@@ -40,6 +41,9 @@ export const Form = ({
             const rule = validations[key]
             if (rule && rule(value, values)) {
                 errorMessageData[key] = rule(value, values)
+                if (errorMessageData[key]) {
+                    isError = true
+                }
             } else {
                 errorMessageData[key] = null
             }
@@ -50,7 +54,9 @@ export const Form = ({
         }
         setErrorMessageData(errorMessageData)
         setValues(valuesData)
-        onSubmit?.(values)
+        if (!isError) {
+            onSubmit?.(values)
+        }
     }
 
     const handleFieldChange = (name) => (eventOrValue) => {
@@ -87,6 +93,8 @@ export const Form = ({
                                 <DatePicker {...restProps} {...restInputProps} />
                             ) : type === FORM_FIELD_TYPES.FILE_SELECT ? (
                                 <FileSelect onFileSelect={handleFieldChange(name)} {...restProps} {...restInputProps} />
+                            ) : type === FORM_FIELD_TYPES.OTP ? (
+                                <Otp {...restProps} {...restInputProps} />
                             ) : null}
                             {!noError && (
                                 <div className="mt-1 h-5">

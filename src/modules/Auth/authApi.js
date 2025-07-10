@@ -13,9 +13,41 @@ export const SIGNIN_TAG = 'SIGN_IN'
 export const SIGNIN_ENDPOINT = 'signIn'
 export const SIGNOUT_ENDPOINT = 'signOut'
 export const SIGNUP_ENDPOINT = 'signUp'
+export const FORGOT_PASSWORD_ENDPOINT = 'forgotPassword'
+export const RESET_PASSWORD_ENDPOINT = 'resetPassword'
 
 export const authApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
+        [FORGOT_PASSWORD_ENDPOINT]: builder.mutation({
+            query: (email) => ({
+                url: '/auth/forgot-password',
+                method: 'POST',
+                body: email,
+            }),
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled
+                    dispatch(showToast({ content: 'Email otp sent successfully', type: TOAST_TYPES.SUCCESS }))
+                } catch (error) {
+                    dispatch(showToast({ error: error?.error }))
+                }
+            },
+        }),
+        [RESET_PASSWORD_ENDPOINT]: builder.mutation({
+            query: (params) => ({
+                url: '/auth/reset-password',
+                method: 'POST',
+                body: params,
+            }),
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled
+                    dispatch(showToast({ content: 'Password reset successfully', type: TOAST_TYPES.SUCCESS }))
+                } catch (error) {
+                    dispatch(showToast({ error: error?.error }))
+                }
+            },
+        }),
         [SIGNIN_ENDPOINT]: builder.mutation({
             query: (credentials) => ({
                 url: '/auth/signin',
@@ -79,4 +111,10 @@ export const authApi = apiSlice.injectEndpoints({
     }),
 })
 
-export const { useSignInMutation, useSignOutMutation, useSignUpMutation } = authApi
+export const {
+    useForgotPasswordMutation,
+    useResetPasswordMutation,
+    useSignInMutation,
+    useSignOutMutation,
+    useSignUpMutation,
+} = authApi

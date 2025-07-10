@@ -78,7 +78,7 @@ const signUpFormFields = [
     },
 ]
 
-export const SignUp = ({ onToggleSignIn: handleToggleSignIn }) => {
+export const SignUp = ({ onSignInToggle: handleSignInToggle }) => {
     const [handleSignUp, { isLoading: isSignUpLoading, data: userSignUpRequestData }] = useSignUpMutation()
     const { data, status } = userSignUpRequestData || {}
 
@@ -99,9 +99,9 @@ export const SignUp = ({ onToggleSignIn: handleToggleSignIn }) => {
 
     useEffect(() => {
         if (data?.user && status?.success) {
-            handleToggleSignIn?.()
+            handleSignInToggle?.()
         }
-    }, [data, navigate, status, handleToggleSignIn])
+    }, [data, navigate, status, handleSignInToggle])
 
     return (
         <>
@@ -115,7 +115,7 @@ export const SignUp = ({ onToggleSignIn: handleToggleSignIn }) => {
                     title="Sign up"
                     validations={validations}
                 />
-                <p className="mt-4 cursor-pointer text-center" onClick={handleToggleSignIn}>
+                <p className="mt-4 cursor-pointer text-center" onClick={handleSignInToggle}>
                     Already have an account? Sign in
                 </p>
             </Card>

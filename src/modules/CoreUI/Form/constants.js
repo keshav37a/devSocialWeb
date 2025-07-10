@@ -4,6 +4,7 @@ export const FORM_FIELD_TYPES = {
     EMAIL: 'EMAIL',
     FILE_SELECT: 'FILE_SELECT',
     INPUT: 'INPUT',
+    OTP: 'OTP',
     PASSWORD: 'PASSWORD',
     TEXT: 'TEXT',
     TEXTAREA: 'TEXTAREA',

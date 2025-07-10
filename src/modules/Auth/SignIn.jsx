@@ -8,7 +8,7 @@ import { FORM_FIELD_TYPES } from '@CoreUI/Form/constants'
 
 import { useSignInMutation } from '@Auth/authApi'
 
-export const SignIn = ({ onSignUpToggle: handleSignUpToggle }) => {
+export const SignIn = ({ onSignUpToggle: handleSignUpToggle, onForgotPasswordToggle: handleForgotPasswordToggle }) => {
     const navigate = useNavigate()
 
     const [handleSignIn, { isLoading: isSignInLoading, data: userSignInRequestData, error }] = useSignInMutation()
@@ -50,9 +50,16 @@ export const SignIn = ({ onSignUpToggle: handleSignUpToggle }) => {
                     submitBtnProps={{ className: 'w-48', label: 'Sign in' }}
                     title="Sign in"
                 />
-                <p className="mt-2 cursor-pointer text-center" onClick={handleSignUpToggle}>
-                    {"Don't have an account? Sign up"}
-                </p>
+                <div className="mt-1 text-center">
+                    <span className="cursor-pointer" onClick={handleSignUpToggle}>
+                        {"Don't have an account? Sign up"}
+                    </span>
+                </div>
+                <div className="text-center">
+                    <span className="cursor-pointer" onClick={handleForgotPasswordToggle}>
+                        {'Forgot password?'}
+                    </span>
+                </div>
             </Card>
         </>
     )
