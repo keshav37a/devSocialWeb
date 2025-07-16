@@ -5,6 +5,7 @@ export const Button = ({
     children,
     disabled,
     isCenter,
+    isFullRounded,
     isFullWidth,
     label,
     onClick,
@@ -16,7 +17,9 @@ export const Button = ({
     return (
         <div className={`btn-container flex ${isCenter ? 'justify-center' : ''}`}>
             <button
-                className={twMerge(`btn btn-neutral ${isFullWidth ? 'w-full' : ''} ${className}`)}
+                className={twMerge(
+                    `btn btn-neutral ${isFullWidth ? 'w-full' : ''} ${isFullRounded ? 'rounded-full' : ''} ${className}`
+                )}
                 disabled={disabled}
                 onClick={handleClick}
                 ref={ref}

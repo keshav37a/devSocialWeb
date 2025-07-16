@@ -11,6 +11,7 @@ import { deleteCookie } from 'src/utils'
 export const SIGNIN_TAG = 'SIGN_IN'
 
 export const SIGNIN_ENDPOINT = 'signIn'
+export const SIGNIN_GOOGLE_ENDPOINT = 'signInGoogle'
 export const SIGNOUT_ENDPOINT = 'signOut'
 export const SIGNUP_ENDPOINT = 'signUp'
 export const FORGOT_PASSWORD_ENDPOINT = 'forgotPassword'
@@ -53,6 +54,29 @@ export const authApi = apiSlice.injectEndpoints({
                 url: '/auth/signin',
                 method: 'POST',
                 body: credentials,
+            }),
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
+                try {
+                    const data = await queryFulfilled
+                    dispatch(signInUser(data?.data?.data?.user))
+                    dispatch(showToast({ content: 'Signed in successfuly', type: TOAST_TYPES.SUCCESS }))
+                } catch (error) {
+                    dispatch(showToast({ error: error?.error }))
+                }
+            },
+            providesTags: [SIGNIN_TAG],
+            invalidatesTags: [
+                GET_USER_FEED_TAG,
+                GET_USER_CONNECTIONS_TAG,
+                GET_USER_CONNECTION_REQUESTS_TAG,
+                SIGNIN_TAG,
+            ],
+        }),
+        [SIGNIN_GOOGLE_ENDPOINT]: builder.mutation({
+            query: (token) => ({
+                url: '/auth/signin-google',
+                method: 'POST',
+                body: token,
             }),
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {
@@ -115,6 +139,7 @@ export const {
     useForgotPasswordMutation,
     useResetPasswordMutation,
     useSignInMutation,
+    useSignInGoogleMutation,
     useSignOutMutation,
     useSignUpMutation,
 } = authApi

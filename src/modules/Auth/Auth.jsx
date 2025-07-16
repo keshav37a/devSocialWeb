@@ -1,9 +1,6 @@
 import { useState } from 'react'
 
-import { ForgotPassword } from './ForgotPassword'
-import { SignIn } from './SignIn'
-
-import { SignUp } from './index'
+import { ForgotPassword, SignIn, SignUp } from '@Auth'
 
 export const Auth = () => {
     const [showSignIn, setShowSignIn] = useState(true)

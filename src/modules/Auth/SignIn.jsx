@@ -1,29 +1,42 @@
 import { useEffect } from 'react'
 
+import { useGoogleLogin } from '@react-oauth/google'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 
 import { Card, Loading } from '@CoreUI'
-import { Form } from '@CoreUI/Form'
+import { Button, Form } from '@CoreUI/Form'
 import { FORM_FIELD_TYPES } from '@CoreUI/Form/constants'
+import { GoogleIcon } from 'icons/GoogleIcon'
 
-import { useSignInMutation } from '@Auth/authApi'
+import { useSignInGoogleMutation, useSignInMutation } from '@Auth/authApi'
 
 export const SignIn = ({ onSignUpToggle: handleSignUpToggle, onForgotPasswordToggle: handleForgotPasswordToggle }) => {
     const navigate = useNavigate()
 
-    const [handleSignIn, { isLoading: isSignInLoading, data: userSignInRequestData, error }] = useSignInMutation()
-    const { data, status } = userSignInRequestData || {}
+    const [handleSignIn, { isLoading: isSignInLoading, error }] = useSignInMutation()
+    const [onSignInGoogle, { isLoading: isSignInGoogleLoading }] = useSignInGoogleMutation()
+
     const errorMessage = error?.data?.error?.message
 
+    const user = useSelector((state) => state.auth.user)
+
+    const handleSignInGoogleHelper = (signInData) => onSignInGoogle({ token: signInData.code })
+
+    const handleSignInGoogle = useGoogleLogin({
+        onSuccess: handleSignInGoogleHelper,
+        flow: 'auth-code',
+    })
+
     useEffect(() => {
-        if (data?.user && status?.success) {
+        if (user) {
             navigate('/feed')
         }
-    }, [data, navigate, status])
+    }, [user, navigate])
 
     return (
         <>
-            <Loading isLoading={isSignInLoading} />
+            <Loading isLoading={isSignInLoading || isSignInGoogleLoading} />
             <Card isCenter cardProps={{ className: 'w-[60%] max-w-120', isAnimate: false }} className="mt-16">
                 <Form
                     fields={[
@@ -50,6 +63,10 @@ export const SignIn = ({ onSignUpToggle: handleSignUpToggle, onForgotPasswordTog
                     submitBtnProps={{ className: 'w-48', label: 'Sign in' }}
                     title="Sign in"
                 />
+                <Button isFullRounded isFullWidth onClick={handleSignInGoogle}>
+                    <GoogleIcon />
+                    <p>Sign in with Google</p>
+                </Button>
                 <div className="mt-1 text-center">
                     <span className="cursor-pointer" onClick={handleSignUpToggle}>
                         {"Don't have an account? Sign up"}
