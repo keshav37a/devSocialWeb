@@ -5,6 +5,8 @@ import { Image } from '@CoreUI'
 
 import { useSignOutMutation } from '@Auth/authApi'
 
+import { ROUTES } from '../../main'
+
 const defaultPhotoUrl = 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
 
 export const Navbar = () => {
@@ -13,7 +15,7 @@ export const Navbar = () => {
 
     const [handleSignOut] = useSignOutMutation()
 
-    const handleNavigateToSignIn = () => navigate('/auth')
+    const handleNavigateToSignIn = () => navigate(ROUTES.AUTH)
 
     return (
         <div className="navbar bg-base-300 shadow-sm">
@@ -40,22 +42,22 @@ export const Navbar = () => {
                                 tabIndex={0}
                             >
                                 <li>
-                                    <Link className="justify-between" to="/feed">
+                                    <Link className="justify-between" to={ROUTES.FEED}>
                                         Feed
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link className="justify-between" to="/connections">
+                                    <Link className="justify-between" to={ROUTES.CONNECTIONS}>
                                         Connections
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link className="justify-between" to="/connection-requests">
+                                    <Link className="justify-between" to={ROUTES.CONNECTION_REQUESTS}>
                                         Requests
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link className="justify-between" to="/profile">
+                                    <Link className="justify-between" to={ROUTES.PROFILE}>
                                         Profile
                                     </Link>
                                 </li>

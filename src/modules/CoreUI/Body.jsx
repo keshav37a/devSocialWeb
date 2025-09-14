@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { Outlet, useLocation, useNavigate } from 'react-router'
+import { Outlet, useLocation } from 'react-router'
 
 import { Chat } from '@Chat'
 import { Footer, Loading, Navbar } from '@CoreUI'
+import { useDocumentTitle } from 'src/hooks/useDocumentTitle'
 
 import { signInUser } from '@Auth/authSlice'
 
@@ -14,18 +15,16 @@ import { getCookieValue } from 'src/utils'
 
 export const Body = () => {
     const dispatch = useDispatch()
-    const navigate = useNavigate()
     const { pathname } = useLocation()
     const { user } = useSelector((state) => state.auth)
     const { showChat, ongoingChats } = useSelector((state) => state.chat)
 
     const token = getCookieValue('token')
 
-    const {
-        isLoading: isUserProfileLoading,
-        data: userProfileRequestData,
-        error,
-    } = useGetUserProfileQuery(null, {
+    // Handle document title updates
+    useDocumentTitle()
+
+    const { isLoading: isUserProfileLoading, data: userProfileRequestData } = useGetUserProfileQuery(null, {
         skip: (!token && !user) || user,
     })
     const { data, status } = userProfileRequestData || {}
@@ -35,18 +34,10 @@ export const Body = () => {
     }, [pathname])
 
     useEffect(() => {
-        const disAllowedRoutes = ['/profile', '/feed', '/connections', '/connection-requests']
-        const token = getCookieValue('token')
-        if (disAllowedRoutes.includes(pathname) && (!token || (token && error && !user))) {
-            navigate('/auth')
-        }
         if (data?.user && status?.success && !user && token) {
             dispatch(signInUser(data.user))
-            if (pathname.includes('signin')) {
-                navigate('/feed')
-            }
         }
-    }, [pathname, dispatch, error, user, data?.user, status?.success, navigate])
+    }, [dispatch, data?.user, status?.success, user, token])
 
     return (
         <Loading isLoading={isUserProfileLoading}>
