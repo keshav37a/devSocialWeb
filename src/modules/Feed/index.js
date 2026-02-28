@@ -1,1 +1,1 @@
-export { Feed } from './Feed'
+export { Feed, default } from './components/Feed'

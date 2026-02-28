@@ -1,34 +1,26 @@
-import { lazy, StrictMode, Suspense } from 'react'
+import { lazy, StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
 
 import { GoogleOAuthProvider } from '@react-oauth/google'
-import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { createBrowserRouter, redirect, RouterProvider } from 'react-router'
 
-import { store } from './store'
+import { SuspenseWrapper, Toast } from '@components'
+import { Body, ErrorBoundary } from '@layout/components'
 
-import { Body, ErrorBoundary, Loading, Toast } from '@CoreUI'
+const Auth = lazy(() => import('@auth'))
+const Connections = lazy(() => import('@connections'))
+const ConnectionRequests = lazy(() => import('@connection-requests'))
+const Feed = lazy(() => import('@feed'))
+const UserProfile = lazy(() => import('@user-profile'))
+
+import { store } from './store'
 
 import { getCookieValue } from 'src/utils'
 
+import { ROUTES } from './constants'
+
 import './styles.css'
-
-// Lazy load components for better performance
-const Auth = lazy(() => import('@Auth').then((module) => ({ default: module.Auth })))
-const Connections = lazy(() => import('@Connections').then((module) => ({ default: module.Connections })))
-const ConnectionRequests = lazy(() => import('@Connections').then((module) => ({ default: module.ConnectionRequests })))
-const Feed = lazy(() => import('@Feed').then((module) => ({ default: module.Feed })))
-const Profile = lazy(() => import('@Profile').then((module) => ({ default: module.Profile })))
-
-// Route constants for better maintainability
-export const ROUTES = {
-    HOME: '/',
-    FEED: '/feed',
-    CONNECTIONS: '/connections',
-    CONNECTION_REQUESTS: '/connection-requests',
-    PROFILE: '/profile',
-    AUTH: '/auth',
-}
 
 // Protected routes that require authentication
 const PROTECTED_ROUTES = [ROUTES.FEED, ROUTES.CONNECTIONS, ROUTES.CONNECTION_REQUESTS, ROUTES.PROFILE]
@@ -65,9 +57,9 @@ const router = createBrowserRouter([
             {
                 path: ROUTES.FEED,
                 element: (
-                    <Suspense fallback={<Loading isLoading />}>
+                    <SuspenseWrapper>
                         <Feed />
-                    </Suspense>
+                    </SuspenseWrapper>
                 ),
                 loader: authLoader,
                 handle: { title: 'DevSocial - Feed' },
@@ -75,9 +67,9 @@ const router = createBrowserRouter([
             {
                 path: ROUTES.CONNECTIONS,
                 element: (
-                    <Suspense fallback={<Loading isLoading />}>
+                    <SuspenseWrapper>
                         <Connections />
-                    </Suspense>
+                    </SuspenseWrapper>
                 ),
                 loader: authLoader,
                 handle: { title: 'DevSocial - Connections' },
@@ -85,9 +77,9 @@ const router = createBrowserRouter([
             {
                 path: ROUTES.CONNECTION_REQUESTS,
                 element: (
-                    <Suspense fallback={<Loading isLoading />}>
+                    <SuspenseWrapper>
                         <ConnectionRequests />
-                    </Suspense>
+                    </SuspenseWrapper>
                 ),
                 loader: authLoader,
                 handle: { title: 'DevSocial - Connection Requests' },
@@ -95,9 +87,9 @@ const router = createBrowserRouter([
             {
                 path: ROUTES.PROFILE,
                 element: (
-                    <Suspense fallback={<Loading isLoading />}>
-                        <Profile />
-                    </Suspense>
+                    <SuspenseWrapper>
+                        <UserProfile />
+                    </SuspenseWrapper>
                 ),
                 loader: authLoader,
                 handle: { title: 'DevSocial - Profile' },
@@ -105,9 +97,9 @@ const router = createBrowserRouter([
             {
                 path: ROUTES.AUTH,
                 element: (
-                    <Suspense fallback={<Loading isLoading />}>
+                    <SuspenseWrapper>
                         <Auth />
-                    </Suspense>
+                    </SuspenseWrapper>
                 ),
                 loader: publicLoader,
                 handle: { title: 'DevSocial - Sign In' },

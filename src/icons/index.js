@@ -1,5 +1,6 @@
 export { ChevronDownIcon } from './ChevronDownIcon'
 export { CrossIcon } from './CrossIcon'
 export { DoubleTickIcon } from './DoubleTickIcon'
+export { GoogleIcon } from './GoogleIcon'
 export { SendIcon } from './SendIcon'
 export { SingleTickIcon } from './SingleTickIcon'

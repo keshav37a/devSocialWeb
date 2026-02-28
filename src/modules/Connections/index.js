@@ -1,3 +1,1 @@
-export { ConnectionRequests } from './ConnectionRequests'
-export { Connections } from './Connections'
-export { UserConnectionCard } from './UserConnectionCard'
+export { Connections, default } from './components/Connections'

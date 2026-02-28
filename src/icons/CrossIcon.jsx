@@ -1,4 +1,4 @@
-import { SVGWrapper } from 'icons/SVGWrapper'
+import { SVGWrapper } from './SVGWrapper'
 
 export const CrossIcon = ({ strokeWidth = '2.5', size = 10, ...restIconProps }) => (
     <SVGWrapper height={size} strokeWidth={strokeWidth} width={size} {...restIconProps}>

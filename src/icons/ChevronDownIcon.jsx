@@ -1,4 +1,4 @@
-import { SVGWrapper } from 'icons/SVGWrapper'
+import { SVGWrapper } from './SVGWrapper'
 
 export const ChevronDownIcon = ({ size = 10, ...restIconProps }) => (
     <SVGWrapper height={size} strokeWidth="0.5" width={size} {...restIconProps}>

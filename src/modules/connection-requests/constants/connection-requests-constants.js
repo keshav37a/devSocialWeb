@@ -1,0 +1,6 @@
+export const GET_USER_CONNECTION_REQUESTS_ENDPOINT = 'getUserConnectionRequests'
+export const REVIEW_CONNECTION_REQUEST_ENDPOINT = 'reviewConnectionRequest'
+export const SEND_CONNECTION_REQUEST_ENDPOINT = 'sendConnectionRequest'
+
+export const GET_USER_CONNECTION_REQUESTS_TAG = 'GET_USER_CONNECTION_REQUESTS'
+export const GET_USER_CONNECTIONS_TAG = 'GET_USER_CONNECTIONS'

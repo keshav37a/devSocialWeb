@@ -87,35 +87,50 @@ export default defineConfig([
             'import/order': [
                 'warn',
                 {
-                    groups: ['external', 'builtin', 'sibling', 'internal'],
+                    groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
                     pathGroups: [
                         {
-                            pattern: 'react',
+                            pattern: '{react,react-dom/client}',
                             group: 'external',
                             position: 'before',
                         },
                         {
-                            pattern: '*/*Slice',
+                            pattern: '{@components,@components/**,**/components,**/components/**}',
                             group: 'internal',
                             position: 'after',
                         },
                         {
-                            pattern: '*/*Api',
+                            pattern: 'icons',
                             group: 'internal',
                             position: 'after',
                         },
                         {
-                            pattern: 'services',
+                            pattern: '**/*{api,slice}',
                             group: 'internal',
                             position: 'after',
                         },
                         {
-                            pattern: '*/*utils',
+                            pattern: '{./store,**/*store}',
                             group: 'internal',
                             position: 'after',
                         },
                         {
-                            pattern: '*/constants',
+                            pattern: 'services/**',
+                            group: 'internal',
+                            position: 'after',
+                        },
+                        {
+                            pattern: '{hooks,**/hooks,**/hooks/**}',
+                            group: 'internal',
+                            position: 'after',
+                        },
+                        {
+                            pattern: 'src/{utils,main}',
+                            group: 'internal',
+                            position: 'after',
+                        },
+                        {
+                            pattern: '{**/constants,**/*constants}',
                             group: 'internal',
                             position: 'after',
                         },
@@ -138,15 +153,16 @@ export default defineConfig([
             'import/resolver': {
                 alias: {
                     map: [
-                        ['@Auth', './src/modules/Auth'],
-                        ['@Chat', './src/modules/Chat'],
-                        ['@Connections', './src/modules/Connections'],
-                        ['@CoreUI', './src/modules/CoreUI'],
-                        ['@Feed', './src/modules/Feed'],
-                        ['@Profile', './src/modules/Profile'],
+                        ['@auth', './src/modules/auth'],
+                        ['@chat', './src/modules/chat'],
+                        ['@components', './src/modules/components'],
+                        ['@connections', './src/modules/connections'],
+                        ['@connection-requests', './src/modules/connection-requests'],
+                        ['@layout', './src/modules/layout'],
+                        ['@feed', './src/modules/feed'],
+                        ['@user-profile', './src/modules/user-profile'],
                         ['hooks', './src/hooks'],
                         ['icons', './src/icons'],
-                        ['modules', './src/modules'],
                         ['services', './src/services'],
                         ['src', './src'],
                     ],
