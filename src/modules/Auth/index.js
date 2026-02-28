@@ -1,1 +1,1 @@
-export { default as Auth } from '@auth/components/Auth'
+export { Auth, default } from '@auth/components/Auth'

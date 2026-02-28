@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useDispatch } from 'react-redux'
 
-import { ChatHeader, ChatMessage } from '@chat/components/'
+import { ChatHeader, ChatMessage } from '@chat/components'
 import { Loading } from '@components'
 import { Form, FORM_FIELD_TYPES } from '@components/Form'
 
