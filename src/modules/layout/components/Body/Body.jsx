@@ -1,7 +1,7 @@
 import { lazy, useEffect } from 'react'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { Outlet, useLocation } from 'react-router'
+import { Outlet, useLocation, useNavigate } from 'react-router'
 
 import { Loading, SuspenseWrapper } from '@components'
 import { Footer, Navbar } from '@layout/components'
@@ -17,8 +17,9 @@ import { getCookieValue } from 'src/utils'
 export const Body = () => {
     const dispatch = useDispatch()
     const { pathname } = useLocation()
-    const { user } = useSelector((state) => state.auth)
+    const { user, isLogoutDispatched } = useSelector((state) => state.auth)
     const { showChat, ongoingChats } = useSelector((state) => state.chat)
+    const navigate = useNavigate()
 
     const token = getCookieValue('token')
 
@@ -39,6 +40,12 @@ export const Body = () => {
             dispatch(signInUser(data.user))
         }
     }, [dispatch, data?.user, status?.success, user, token])
+
+    useEffect(() => {
+        if (isLogoutDispatched) {
+            navigate('/auth')
+        }
+    }, [isLogoutDispatched, navigate])
 
     return (
         <Loading isLoading={isUserProfileLoading}>

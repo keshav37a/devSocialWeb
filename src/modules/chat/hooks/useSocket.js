@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import { io } from 'socket.io-client'
 
 import { EVENTS } from '@chat/constants/chat-constants'
+import { BASE_URL } from 'src/constants'
 
 export const useSocket = ({
     fromUser,
@@ -12,7 +13,7 @@ export const useSocket = ({
     onSaveMessage,
     onUserTyping,
     participants,
-    url,
+    url = BASE_URL,
 }) => {
     const socketRef = useRef(null)
 

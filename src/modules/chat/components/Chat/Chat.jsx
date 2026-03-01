@@ -91,7 +91,6 @@ export const Chat = ({ participants, partnerUser, signedInUser, onCloseChat }) =
     const handleGetUserTypingEvent = useCallback(() => setIsTyping(true), [])
 
     const { socket } = useSocket({
-        url: 'http://localhost:7777',
         fromUser: signedInUserId,
         participants,
         onReadMessage: handleGetReadMessageEvent,
