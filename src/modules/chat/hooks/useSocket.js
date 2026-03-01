@@ -28,6 +28,7 @@ export const useSocket = ({
     const initialiseSocket = useCallback(() => {
         const socket = io(url, {
             reconnection: false,
+            withCredentials: true,
         })
         return socket
     }, [url])
