@@ -36,7 +36,7 @@ export const Toast = ({ children }) => {
     return (
         <>
             {content || errorMessage ? (
-                <div className="toast-top toast-center toast z-100">
+                <div className="toast toast-center toast-top z-100">
                     <div
                         className={`alert transform transition-all duration-500 ${animateClose ? 'translate-x-150 opacity-0' : 'translate-x-0 opacity-100'} ${type === TOAST_TYPES.ERROR || error ? 'bg-rose-500' : type === TOAST_TYPES.INFO ? 'bg-sky-400' : type === TOAST_TYPES.SUCCESS ? 'bg-emerald-400' : 'bg-sky-400'} `}
                     >

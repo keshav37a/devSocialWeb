@@ -29,6 +29,7 @@ export const useSocket = ({
         const socket = io(url, {
             reconnection: false,
             withCredentials: true,
+            transports: ['websocket'],
         })
         return socket
     }, [url])
